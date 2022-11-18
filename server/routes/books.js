@@ -4,8 +4,9 @@ import { getDates, createBook, makeAppointment, getAppointment } from '../contro
 const router = express.Router();
 
 router.get('/:date', getDates);
-router.post('/', createBook);
 router.patch('/:dateID', makeAppointment);
 router.get('/:dateID/:bookID/shift', getAppointment);
+
+router.post('/', createBook);
 
 export default router;

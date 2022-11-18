@@ -8,7 +8,7 @@ export const getAnnouncement = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const announcement = await AnnouncementForm.findById(id)
+        const announcement = await AnnouncementForm.findById(id);
         res.json(announcement)
     } catch (error) {
         res.status(409).json({ message: err.message });

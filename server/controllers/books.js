@@ -37,9 +37,9 @@ export const getDates = async (req, res) => {
 
     try {
         const arr = await BookForm25.find({ $and: [{ bookingdate: { $gte: newDate} }, { available: true }] })
-        
-        if(arr.length < 1) return res.status(404).send({message: "Saat ini semua tanggal masih penuh"})
-        res.json({ data: arr })
+        // if(arr.length < 1) return res.status(404).send({message: "Saat ini semua tanggal masih penuh"})
+        // if(arr.length < 1) return res.json({message: "Saat ini semua tanggal masih penuh", type: "err_data"})
+        res.json(arr)
     } catch (error) {
         res.status(409).json({ message: err.message });
     }
@@ -51,14 +51,37 @@ export const makeAppointment = async (req, res) => {
     
     const { name, cellphone, sessionbook, bookingcode } = req.body;
     const id = req.params.dateID;
-
-    if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send({title:"Penuh", message:"Tanggal tesebut belum terima booking"})
-
+    const maxBooking = 30;
+    
+    if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Tanggal tesebut belum terima booking")
+    // if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send({message:"Tanggal tesebut belum terima booking", type: "err_data"})
+    
     const book = await BookForm25.findById(id);
-    book[sessionbook].push({name, cellphone, bookingcode, timestamp: new Date()});
 
+    // check apakah shift yang dipilih masih ada tempat atau tidak
     const capacityShift = `${sessionbook}Available`;
-    if(book[capacityShift] == false) return res.status(404).send({message: "Jam ini sudah penuh"});
+    if(book[capacityShift] == false){
+        return res.json({message: "Jam ini sudah penuh", type: "err_data"})
+    };
+
+    //check apakah sudah booking 2x
+    let count = 0;
+    let shifts = ['shift1', 'shift2', 'shift3']
+
+    for (let i = 0; i < shifts.length; i++){
+        book[shifts[i]].map((item) => {
+            if(item.cellphone == cellphone){
+                count++
+            }
+        })
+    }
+
+    console.log("count:", count)
+    if(count >= maxBooking){
+        return res.json({message: `Maaf anda sudah booking ${maxBooking} kali. Booking anda tidak berhasil` , type: "err_data"})
+    }
+
+    book[sessionbook].push({name, cellphone, bookingcode, timestamp: new Date()});
 
     if(book[sessionbook].length >= book['max']){
         book[capacityShift] = false;
@@ -82,32 +105,32 @@ export const makeAppointment = async (req, res) => {
 
 // second step for booking, get the data from the given bookID
 export const getAppointment = async (req, res) => {
-    console.log("get the appoinment")
+    console.log("get the appointment")
 
     const { dateID, bookID } = req.params;
     const { shiftquery } = req.query;
+    let book, index;
+    let newData = {}
     
     if(!mongoose.Types.ObjectId.isValid(dateID)) return res.status(404).send("Tanggal tesebut belum terima booking")
 
-    const allBooksToSpecificDate = await BookForm25.findById(dateID);
+    const booksOnTheDate = await BookForm25.findById(dateID);
 
-    let book, index;
-    let newData = {}
 
-    allBooksToSpecificDate[shiftquery].map((item, ind) => {
+    booksOnTheDate[shiftquery].map((item, ind) => {
         if(item._id.toString() == bookID){
             book = item;
             index = ind;
         }
     })
     
-    
     if(book){
+        console.log(book)
         newData.name = book.name;
         newData.cellphone = book.cellphone;
         newData.bookingcode = book.bookingcode;
         newData.timestamp = book.timestamp;
-        newData.bookingdate = allBooksToSpecificDate.bookingdate;
+        newData.bookingdate = booksOnTheDate.bookingdate;
         newData.shift = shiftquery;
         newData.index = index;
         newData.id = book._id;

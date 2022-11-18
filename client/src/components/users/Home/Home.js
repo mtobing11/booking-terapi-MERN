@@ -1,28 +1,110 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 
 // import component
-import { Grow, Container, Grid, Card, CardMedia } from '@mui/material';
+import { Grow, Container, Grid, Card, CardMedia, Paper } from '@mui/material';
 import FrontTitle from '../FrontTitle/FrontTitle';
+import Footer from '../Footer/Footer';
 import UserForm from '../UserForm/UserForm';
+import AnnouncementModal from '../AnnouncementModal/AnnouncementModal';
 import image from '../../../data/terapi_ketok_kevin_01.jpg';
 
+// import action
+import { fetchAnnouncement } from '../../../actions/announcement';
+
 const Home = () => {
-  return (
-    <Grow in>
-        <Card>
+    const dispatch = useDispatch();
+    const [announceData, setAnnounceData] = useState({ message: '', duration: ''});
+    const [ticketData, setTicketData] = useState({ name: '', cellphone: '', bookingcode: '', bookingdate: '', index: '', shift: '', timestamp: '', id: '' });
+    const [isTimeLimit, setIsTimeLimit] = useState(false);
+    const [isShowProgress, setIsShowProgress] = useState(false);
+    const fetchAnnounceData = useSelector((state) => state.announcements.announceData[0]);
+    const fetchTicketData = useSelector((state) => state.books.ticketData);
+    const [title, setTitle] = useState("Info");
+    const isAnnounce = useSelector((state) => state.announcements.isAnnounce);
+    const arrAnnounce = useSelector((state) => state.announcements.announceData.length);
+    const isCreateTicket = useSelector((state) => state.books.isCreateTicket);
+    const announcementID = '63736bef3dda6cf66d20d536';
+
+    useEffect(() => {
+        dispatch(fetchAnnouncement(announcementID))
+    }, [])
+
+    useEffect(() => {
+        if(fetchTicketData){
+            setTicketData({
+                ...ticketData,
+                name: fetchTicketData.name, 
+                cellphone: fetchTicketData.cellphone, 
+                bookingcode: fetchTicketData.bookingcode, 
+                bookingdate: fetchTicketData.bookingdate,
+                index: fetchTicketData.index, 
+                shift: fetchTicketData.shift, 
+                timestamp: fetchTicketData.timestamp, 
+                id: fetchTicketData.id
+            })
+        }
+    }, [isCreateTicket])
+
+    useEffect(() => {
+        console.log("isAnnounce:", isAnnounce)
+        // console.log("Announce length:", arrAnnounce)
+        console.log(fetchAnnounceData)
+        if(fetchAnnounceData){
+            console.log("Announce")
+            let announcementType = fetchAnnounceData.type;
+            setAnnounceData({...announceData, message: fetchAnnounceData.message, duration: fetchAnnounceData.duration})
+            setIsTimeLimit(fetchAnnounceData.isTimeLimit);
+            setIsShowProgress(fetchAnnounceData.isShowProgress);
+
+            switch(announcementType){
+                case 'opening':
+                    return setTitle("Selamat Datang")
+                case 'err_data':
+                    return setTitle("Mohon Maaf")
+                case 'info':
+                    return setTitle("Silahkan Tunggu")
+                default:
+                    return setTitle("Info")
+            }
+        } else {
+            setIsTimeLimit(false);
+            setIsShowProgress(false);
+        }
+
+        
+    }, [arrAnnounce]);
+
+    const handleAnnounceData = () => {
+        setAnnounceData({...announceData, message: fetchAnnounceData.message, duration: fetchAnnounceData.duration})
+    }
+
+    return (
+        <Grow in>
             <CardMedia image={image}>
-                <Container maxWidth="sm" sx={{padding: 10, zIndex: 5}}>
+                <Container maxWidth="sm" sx={{padding: 10}}>
                     <Grid sx={{marginBottom: 10}}>
                         <FrontTitle />
                     </Grid>
                     <Grid>
                         <UserForm />
                     </Grid>
+                    <Grid>
+                        <Footer />
+                    </Grid>
+                    <Paper>
+                        {isAnnounce && (
+                            <AnnouncementModal status={isAnnounce} title={title} message={announceData.message} isShowProgress={isShowProgress}
+                            isTimeLimit={isTimeLimit} duration={announceData.duration} />
+                        )}
+                        {isCreateTicket && (
+                            <AnnouncementModal status={isCreateTicket} title="Booking Anda Berhasil" ticket={ticketData} isTimeLimit={false} isTicket={true} isShowProgress={false} />
+                        )}
+                    </Paper>
                 </Container>
             </CardMedia>
-        </Card>
-    </Grow>
-  )
+        </Grow>
+    )
 }
 
 export default Home
