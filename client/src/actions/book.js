@@ -131,32 +131,6 @@ export const closeTicket = () => async (dispatch) => {
 //     }
 // }
 
-// export const fetchAnnouncement = (id) => async (dispatch) => {
-//     try {
-//         console.clear();
-//         console.log('fetch Announcement begin')
-//         const { data } = await api.fetchAnnouncement(id);
-//         // console.log('fetch announcement completed');
-//         // console.log(data)
-
-//         dispatch({ type: FETCH_ANNOUNCEMENT, payload: data })   
-//     } catch (error) {
-//         if(error.response.status === 404) {
-//             console.log(error.response.data)
-//         } else {
-//             console.log(error);
-//         }
-//     }
-// }
-
-// export const closeAnnouncement = () => async (dispatch) => {
-//     try {
-//         dispatch({ type: CLOSE_ANNOUNCEMENT })
-//     } catch (error) {
-//         console.log(error)
-//     }
-// }
-
 // export const createAnnouncement = (announcement, history) => async (dispatch) => {
 //     try {
 //         console.log("making announce");
@@ -177,14 +151,4 @@ export const closeTicket = () => async (dispatch) => {
 //         console.log('error di action announcement')
 //         console.log(error)
 //     }
-// }
-
-// export const handleActiveMenu = (activeMenu) => (dispatch) => {
-//     // console.log("action active menu")
-//     dispatch({ type: ACTIVE_MENU, payload: activeMenu })
-// }
-
-// export const handleResizeScreen = (screenSize) => (dispatch) => {
-//     // console.log("size:", screenSize);
-//     dispatch({ type: RESIZE_SCREEN, payload: screenSize })
 // }

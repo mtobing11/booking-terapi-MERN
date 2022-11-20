@@ -8,9 +8,9 @@ export const links = [
     title: 'Dashboard',
     links: [
       {
-        name: 'ecommerce',
+        name: 'Overview',
         icon: <FontAwesomeIcon icon={faBagShopping} />,
-        link: 'ecommerce',
+        link: 'overview',
       },
     ],
   },
@@ -19,19 +19,19 @@ export const links = [
     title: 'Pages',
     links: [
       {
-        name: 'New Booking Date',
+        name: 'Booking Date',
         icon: <FontAwesomeIcon icon={faCalendar} />,
-        link: 'newdate',
+        link: 'bookingdate',
       },
       {
         name: 'customers today',
         icon: <FontAwesomeIcon icon={faPeopleGroup} />,
-        link: 'bookdate',
+        link: 'customerstoday',
       },
       {
         name: 'customers tomorrow',
         icon: <FontAwesomeIcon icon={faUserCheck} />,
-        link: 'bookdate',
+        link: 'customersnextday',
       },
       {
         name: 'Announce Message',

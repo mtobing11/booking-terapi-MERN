@@ -1,6 +1,6 @@
 import { ACTIVE_MENU, RESIZE_SCREEN } from '../constants/actionTypes';
 
-export default(state = { dashboardState: [] }, action) => {
+export default(state = { activeMenu: true }, action) => {
     switch(action.type) {
         case ACTIVE_MENU:
             return { ...state, activeMenu: action.payload }
