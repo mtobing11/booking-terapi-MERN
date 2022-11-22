@@ -1,5 +1,5 @@
 import * as api from '../api';
-import { CREATE_BOOK, ACTIVE_MENU, RESIZE_SCREEN, FETCH_ALL_DATES, START_PROCESSING, END_PROCESSING, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT } from '../constants/actionTypes';
+import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT } from '../constants/actionTypes';
 
 // functions
 function addZeroToDate(num){
@@ -50,7 +50,7 @@ export const getAvailableDates = (date) => async (dispatch) =>{
         
         dispatch({ type: FETCH_ALL_DATES, payload: data })   
     } catch (error) {
-        if(error.response.status === 404) {
+        if(error.response?.status === 404) {
             console.log(error.response.data)
         } else {
             console.log(error)
@@ -118,37 +118,3 @@ export const closeTicket = () => async (dispatch) => {
         console.log(error)
     }
 }
-
-// export const createBook = (book, history) => async (dispatch) => {
-//     // console.log("book in actionTypes", book);
-//     console.log(book)
-//     try {
-//         const { data } = await api.createBook(book);
-//         console.log(data);
-//     } catch (error){
-//         console.log('error di action createBook')
-//         console.log(error)
-//     }
-// }
-
-// export const createAnnouncement = (announcement, history) => async (dispatch) => {
-//     try {
-//         console.log("making announce");
-//         const { data } = await api.createAnnouncement(announcement);
-//         console.log(data)
-//     } catch (error){
-//         console.log('error di action announcement')
-//         console.log(error)
-//     }
-// }
-
-// export const updateAnnouncement = (announcement, id, history) => async (dispatch) => {
-//     try {
-//         console.log("making announce");
-//         const { data } = await api.updateAnnouncement(announcement, id);
-//         console.log(data);
-//     } catch (error){
-//         console.log('error di action announcement')
-//         console.log(error)
-//     }
-// }

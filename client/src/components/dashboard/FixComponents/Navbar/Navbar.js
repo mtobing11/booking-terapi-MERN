@@ -30,6 +30,7 @@ const NavButton = ({ title, customFunc, icon, color, dotColor }) => (
 
 const Navbar = () => {
   const dispatch = useDispatch();
+  const user = JSON.parse(localStorage.getItem('profile'))
   const [screenSize, setScreenSize] = useState(window.innerWidth);
   const [styleNavbar1, setStyleNavbar1] = useState(styleNavbar);
   const [styleProfileWrapper1, setStyleProfileWrapper1] = useState(styleProfileWrapper);
@@ -43,7 +44,7 @@ const Navbar = () => {
 
     window.addEventListener('resize', handleResize);
     handleResize();
-
+    
     return () => window.removeEventListener('resize', handleResize);
   }, [])
 
@@ -60,7 +61,7 @@ const Navbar = () => {
             <Avatar src={avatar} />
             <div style={{ display: 'flex' }}>
               <Typography sx={{mr: '0.25rem'}} variant="body2" align="center">Hi</Typography>
-              <Typography variant="body2" align="center">Helen</Typography>
+              <Typography variant="body2" align="center">{user.userData.name}</Typography>
             </div>
           </div>
         </Tooltip>

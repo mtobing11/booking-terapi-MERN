@@ -15,10 +15,18 @@ function formatDate(date){
 
 // open new date for booking
 export const createBook = async (req, res) => {
+    if(!req.userId) return res.json({ message: 'Unauthenticated' })
+    const user = JSON.parse(localStorage.getItem('profile'));
+    const creator = user.useData.name;
+
     const bookingdate = req.body.newdatebook;
     const max = req.body.capacitybook;
+    const maxbooking = req.body.maxbooking;
+    const shifts = req.body.shifts;
+    const schedule = req.body.schedule;
+    const shiftInfo = { quantity: shifts, schedule }
 
-    const newBook = await BookForm25({bookingdate: new Date(bookingdate).toISOString(), max: max});
+    const newBook = await BookForm25({bookingdate: new Date(bookingdate).toISOString(), max: max, maxbooking, shiftInfo, creator});
     console.log(newBook)
     try {
         await newBook.save()
@@ -51,12 +59,13 @@ export const makeAppointment = async (req, res) => {
     
     const { name, cellphone, sessionbook, bookingcode } = req.body;
     const id = req.params.dateID;
-    const maxBooking = 30;
+    
     
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Tanggal tesebut belum terima booking")
     // if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send({message:"Tanggal tesebut belum terima booking", type: "err_data"})
     
     const book = await BookForm25.findById(id);
+    const maxBooking = book.maxbooking;
 
     // check apakah shift yang dipilih masih ada tempat atau tidak
     const capacityShift = `${sessionbook}Available`;

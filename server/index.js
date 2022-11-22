@@ -5,7 +5,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 import bookRoutes from './routes/books.js';
-import announcementRoutes from './routes/announcement.js';
+import dashboardRoutes from './routes/dashboard.js';
+import users from './routes/users.js';
 
 const app = express();
 dotenv.config();
@@ -15,7 +16,8 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
 app.use(cors())
 
 app.use('/books', bookRoutes);
-app.use('/announcement', announcementRoutes);
+app.use('/dashboard', dashboardRoutes);
+app.use('/user', users);
 
 const PORT = process.env.PORT || 5000
 

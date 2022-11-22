@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBagShopping, faCartShopping, faPeopleGroup, faUserCheck, faCalendar, faSquarePollVertical, faPenToSquare, faFillDrip, faChartLine, faChartArea, faChartColumn, faChartPie, faCoins, faChartSimple, faTriangleExclamation, faChartBar, faMicrophone } from '@fortawesome/free-solid-svg-icons'
+import { faBagShopping, faCartShopping, faPeopleGroup, faUserCheck, faCalendar, faSquarePollVertical, faPenToSquare, faFillDrip, faChartLine, faChartArea, faChartColumn, faChartPie, faCoins, faChartSimple, faTriangleExclamation, faChartBar, faMicrophone, faGear } from '@fortawesome/free-solid-svg-icons'
 
 export const links = [
   {
@@ -37,6 +37,11 @@ export const links = [
         name: 'Announce Message',
         icon: <FontAwesomeIcon icon={faMicrophone} />,
         link: 'announce',
+      },
+      {
+        name: 'Initial Setup',
+        icon: <FontAwesomeIcon icon={faGear} />,
+        link: 'initialsetup',
       },
     ],
   },

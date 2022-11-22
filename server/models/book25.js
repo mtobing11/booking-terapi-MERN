@@ -5,13 +5,22 @@ const book25Schema = mongoose.Schema({
         type: Date,
         required: true
     },
+    creator: String,
     max: {
         type: Number,
         default: 25
     },
+    maxbooking: {
+        type: Number,
+        default: 1
+    },
     available: {
         type: Boolean,
         default: true
+    },
+    shiftInfo: {
+        quantity: { type: Number, default: 3},
+        schedule: []
     },
     shift1Available: {
         type: Boolean,

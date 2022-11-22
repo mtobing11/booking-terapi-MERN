@@ -2,6 +2,7 @@ export const CREATE_BOOK = 'CREATE_BOOK';
 export const ACTIVE_MENU = 'ACTIVE_MENU';
 export const RESIZE_SCREEN = 'RESIZE_SCREEN';
 export const FETCH_ALL_DATES = 'FETCH_ALL_DATES';
+export const INITIAL_SETUP = 'INITIAL_SETUP';
 
 export const CREATE_TICKET = 'CREATE_TICKET';
 export const CLOSE_TICKET = 'CLOSE_TICKET';
@@ -11,3 +12,6 @@ export const CLOSE_ANNOUNCEMENT = 'CLOSE_ANNOUNCEMENT';
 
 export const START_PROCESSING = 'START_PROCESSING';
 export const END_PROCESSING = 'END_PROCESSING';
+
+export const AUTH = 'AUTH';
+export const LOGOUT = 'LOGOUT';
