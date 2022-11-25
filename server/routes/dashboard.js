@@ -1,16 +1,18 @@
 import express from 'express';
-import { createAnnouncement, updateAnnouncement, getAnnouncement, createInitialSetup, updateInitialSetup, getInitialSetup, getCustomers } from '../controllers/dashboard.js';
+import { createAnnouncement, updateAnnouncement, getAnnouncement, createInitialSetup, updateInitialSetup, getInitialSetup, getCustomers, updateExistingBookDate } from '../controllers/dashboard.js';
+import auth from '../middleware/auth.js';
 
 const router = express.Router();
 
 router.get('/announcement/:id', getAnnouncement);
-router.post('/announcement', createAnnouncement);
-router.patch('/announcement/:id', updateAnnouncement);
+router.post('/announcement', auth, createAnnouncement);
+router.patch('/announcement/:id', auth, updateAnnouncement);
 
-router.get('/initialsetup/:id', getInitialSetup);
-router.post('/initialsetup', createInitialSetup);
-router.patch('/initialsetup/:id', updateInitialSetup);
+router.get('/initialsetup/:id', auth, getInitialSetup);
+router.post('/initialsetup', auth, createInitialSetup);
+router.patch('/initialsetup/:id', auth, updateInitialSetup);
+router.patch('/date/:id', auth, updateExistingBookDate);
 
-router.get('/date/:date', getCustomers);
+router.get('/date/:date', auth, getCustomers);
 
 export default router;

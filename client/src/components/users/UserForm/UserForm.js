@@ -27,7 +27,7 @@ const UserForm = () => {
     const [dateID, setDateID] = useState('');
     const [formData, setFormData] = useState({ name: '', cellphone: '', datebook: '', sessionbook: '', bookingcode: ''});
     const [shifts, setShifts] = useState({shift1: "", shift2: "", shift3: ""})
-    const availableDate = useSelector((state) => state.books.availableDate);
+    const availableDate = useSelector((state) => state.books?.availableDate);
 
     useEffect(() => {
         let dateNow = new Date();
@@ -38,12 +38,14 @@ const UserForm = () => {
 
      useEffect(() => {
         // console.log(availableDate)
-        if(availableDate){
+        if(availableDate.length > 0){
             setFormData({ ...formData, datebook: dayjs(availableDate[0].bookingdate)})
             setDateID(availableDate[0]._id)
 
             let shiftsSchedule = availableDate[0].shiftInfo.schedules
             setShifts({ ...shifts, shift1: shiftsSchedule[0], shift2: shiftsSchedule[1], shift3: shiftsSchedule[2] })
+        } else {
+            setFormData({ ...formData, datebook: ''})
         }
     }, [availableDate])
 

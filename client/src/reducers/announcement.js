@@ -1,4 +1,4 @@
-import { CREATE_ANNOUNCEMENT, FETCH_ANNOUNCEMENT, FETCH_ANNOUNCEMENT_FOR_ADMIN,CLOSE_ANNOUNCEMENT } from '../constants/actionTypes';
+import { CREATE_ANNOUNCEMENT, FETCH_ANNOUNCEMENT, FETCH_ANNOUNCEMENT_FOR_ADMIN,CLOSE_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT } from '../constants/actionTypes';
 
 export default(state = { isAnnounce: false, announceData: [] }, action) => {
     switch(action.type) {
@@ -19,6 +19,8 @@ export default(state = { isAnnounce: false, announceData: [] }, action) => {
                 }
             }
             // return { ...state, isAnnounce: false, announceData: ''}
+        case UPDATE_ANNOUNCEMENT:
+            return { ...state, announceDataForAdmin: action.payload };
         default:
             return state;
     }

@@ -7,8 +7,6 @@ import { formatDate } from '../utils/utils.js';
 // open new date for booking
 export const createBook = async (req, res) => {
     if(!req.userId) return res.json({ message: 'Unauthenticated' });
-    console.log("req.body")
-    console.log(req.body)
 
     const { creator, maxbooking, shifts } = req.body;
     const bookingdate = req.body.newdatebook;
@@ -21,15 +19,27 @@ export const createBook = async (req, res) => {
     try {
         await newBook.save()
         res.status(201).json(newBook)
-    } catch (err) {
-        res.status(409).json({ message: err.message });
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
+}
+
+// fetch all available dates for booking
+export const deleteDate = async (req, res) => {
+    const { id : _id } = req.params;
+    console.log("delete date id:", _id)
+
+    if(!mongoose.Types.ObjectId.isValid(_id)) return res.status(404).send("No such date");
+    
+    await BookForm25.findByIdAndRemove(_id);
+
+    res.json({ message: 'Date deleted successfully' })
 }
 
 // fetch all available dates for booking
 export const getDates = async (req, res) => {
     console.log("Someone access the available date");
-
+    
     const { date: availableDate } = req.params;
     let newDate = formatDate(availableDate);
 
@@ -37,7 +47,23 @@ export const getDates = async (req, res) => {
         const arr = await BookForm25.find({ $and: [{ bookingdate: { $gte: newDate} }, { available: true }] })
         res.json(arr)
     } catch (error) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: error.message });
+    }
+}
+
+// fetch all dates
+export const getAllDates = async (req, res) => {
+    console.log("Dashboard get all dates");
+    
+    const { date: availableDate } = req.params;
+    let newDate = formatDate(availableDate);
+    
+    try {
+        const arr = await BookForm25.find({ bookingdate: { $gte: newDate} })
+        // console.log(arr)
+        res.json(arr)
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -87,17 +113,19 @@ export const makeAppointment = async (req, res) => {
             console.log("full, close the date, at:", new Date())
         }
     }
+    try {
+        const updatedBook = await BookForm25.findByIdAndUpdate(id, book, {new: true});
     
-    const updatedBook = await BookForm25.findByIdAndUpdate(id, book, {new: true});
-
-    let bookingID; 
-    updatedBook[sessionbook].map((booked) => {
-        if(booked.bookingcode === bookingcode){
-            bookingID = booked._id
-        }
-    })
-
-    res.json(bookingID);
+        let bookingID; 
+        updatedBook[sessionbook].map((booked) => {
+            if(booked.bookingcode === bookingcode){
+                bookingID = booked._id
+            }
+        })
+        res.json(bookingID);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
 }
 
 // second step for booking, get the data from the given bookID
@@ -111,27 +139,32 @@ export const getAppointment = async (req, res) => {
     
     if(!mongoose.Types.ObjectId.isValid(dateID)) return res.status(404).send("Tanggal tesebut belum terima booking")
 
-    const booksOnTheDate = await BookForm25.findById(dateID);
-
-
-    booksOnTheDate[shiftquery].map((item, ind) => {
-        if(item._id.toString() == bookID){
-            book = item;
-            index = ind;
+    try {
+        const booksOnTheDate = await BookForm25.findById(dateID);
+    
+    
+        booksOnTheDate[shiftquery].map((item, ind) => {
+            if(item._id.toString() == bookID){
+                book = item;
+                index = ind;
+            }
+        })
+        
+        if(book){
+            console.log(book)
+            newData.name = book.name;
+            newData.cellphone = book.cellphone;
+            newData.bookingcode = book.bookingcode;
+            newData.timestamp = book.timestamp;
+            newData.bookingdate = booksOnTheDate.bookingdate;
+            newData.shift = shiftquery;
+            newData.index = index;
+            newData.id = book._id;
         }
-    })
-    
-    if(book){
-        console.log(book)
-        newData.name = book.name;
-        newData.cellphone = book.cellphone;
-        newData.bookingcode = book.bookingcode;
-        newData.timestamp = book.timestamp;
-        newData.bookingdate = booksOnTheDate.bookingdate;
-        newData.shift = shiftquery;
-        newData.index = index;
-        newData.id = book._id;
+        
+        res.json(newData);
+        
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
-    
-    res.json(newData);
 }

@@ -131,6 +131,37 @@ export const getCustomers = async (req, res) => {
 
         res.json(arr)
     } catch (error) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: error.message });
     }
+}
+
+// edit existing date book
+export const updateExistingBookDate = async (req, res) => {
+    console.log("update book date")
+    const id = req.params.id;
+
+    if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send("Tanggal tidak ada");
+    const oldBook = await BookForm25.findById(id);
+    const { available } = req.body;
+    
+    if(available){
+        const { capacitybook, maxbooking, shifts, schedule, bookingdate, shift1Available, shift2Available, shift3Available } = req.body;
+
+        oldBook.max = capacitybook;
+        oldBook.maxbooking = maxbooking;
+        oldBook.shiftInfo.quantity = shifts;
+        oldBook.shiftInfo.schedules = schedule;
+        oldBook.shift1Available = shift1Available;
+        oldBook.shift2Available = shift2Available;
+        oldBook.shift3Available = shift3Available;
+    }
+    oldBook.available = available;
+
+    try {
+        const newBook = await BookForm25.findByIdAndUpdate(id, oldBook, {new: true})
+        res.json(newBook);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+
 }

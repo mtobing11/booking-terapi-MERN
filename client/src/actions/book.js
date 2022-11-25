@@ -1,8 +1,8 @@
 import * as api from '../api';
 import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT, FETCH_SHIFTS } from '../constants/actionTypes';
-import { formattingDate } from '../utils/utils'
+import { formattingDate } from '../utils/utils';
 
-// actions
+// get available dates
 export const getAvailableDates = (date) => async (dispatch) =>{
     try {
         const { data } = await api.fetchDates(date);
@@ -13,6 +13,21 @@ export const getAvailableDates = (date) => async (dispatch) =>{
         
         dispatch({ type: FETCH_ALL_DATES, payload: data });
         dispatch({ type: FETCH_SHIFTS, payload: data[0].shiftInfo.schedules });
+    } catch (error) {
+        if(error.response?.status === 404) {
+            console.log(error.response.data)
+        } else {
+            console.log(error)
+        }
+    }
+}
+
+// get All Dates
+export const getAllDates = (date) => async (dispatch) =>{
+    try {
+        const { data } = await api.fetchAllDates(date);
+        
+        dispatch({ type: FETCH_ALL_DATES, payload: data });
     } catch (error) {
         if(error.response?.status === 404) {
             console.log(error.response.data)
@@ -55,8 +70,6 @@ export const makeAppointment = (book, dateID) => async (dispatch) => {
 
         const formattedDate = formattingDate(new Date(dataBooked.data.bookingdate), 'dmmy')
         const formattedTimestamp = formattingDate(new Date(dataBooked.data.timestamp), 'dmmmy')
-        // const formattedDate = formatDate(new Date(dataBooked.data.bookingdate), 'dmmy')
-        // const formattedTimestamp = formatDate(new Date(dataBooked.data.timestamp), 'dmmmy')
         const newDataChangeDateFormat = { ...dataBooked.data, bookingdate: formattedDate, timestamp: formattedTimestamp}
         
         await dispatch({ type: CLOSE_ANNOUNCEMENT})
@@ -67,11 +80,7 @@ export const makeAppointment = (book, dateID) => async (dispatch) => {
             dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "Mohon maaf, sudah fullbook", type: "err_data"} })
         }
     } catch (error) {
-        if(error.response.status === 404) {
-            console.log(error.response.data)
-        } else {
-            console.log(error)
-        }
+        console.log(error)
     }
 }
 

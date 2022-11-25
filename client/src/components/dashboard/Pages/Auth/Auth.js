@@ -41,7 +41,7 @@ const Auth = () => {
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
   const switchMode = () => { setIsSignup((prevIsSignup) => !prevIsSignup) }
-  console.log('user in Auth:', user)
+  
   return (
     <Container component='main' maxWidth='xs'>
         <Paper elevation={3} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt:'2rem', p: '0.5rem'}}>

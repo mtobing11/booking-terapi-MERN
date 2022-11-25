@@ -9,7 +9,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 // import actions
-import { createBook, getInitialSetup } from '../../../../../actions/dashboardMenu';
+import { createBook, getInitialSetup, updateExistingBookDate } from '../../../../../actions/dashboardMenu';
 import { getAvailableDates } from '../../../../../actions/book';
 
 // initial state
@@ -29,6 +29,8 @@ const NewBookingDate = () => {
   const [shiftArr, setShiftArr] = useState([]);
   const availableDate = useSelector((state) => state.books?.availableDate);
   const initialSetup = useSelector((state) => state.dashboard?.initialSetup);
+  const existingBookID = useSelector((state) => state.dashboard?.existingBookID)
+  const initialType = useSelector((state) => state.dashboard?.type)
 
   useEffect(() => {
     let dateNow = new Date();
@@ -49,7 +51,6 @@ const NewBookingDate = () => {
 
   useEffect(() => {
     if(availableDate){
-      // availableDate.map((item) => console.log(item))
         setDataAvailable({
           ...dataAvailable, bookingdate: availableDate.bookingdate, max: availableDate.max, shifts: 3, maxbooking: availableDate.maxbooking, 
           id: availableDate._id
@@ -58,22 +59,25 @@ const NewBookingDate = () => {
   }, [availableDate])
 
   useEffect(() => {
-    // console.log(initialSetup);
     if(initialSetup){
+      console.log("get set up")
       setFormNewDate({
-        ...formNewDate, max: initialSetup.max, maxbooking: initialSetup.maxbooking, shifts: initialSetup.shifts, 
+        ...formNewDate, capacitybook: initialSetup.max, maxbooking: initialSetup.maxbooking, shifts: initialSetup.shifts, bookingdate: initialSetup?.bookingdate,
         schedule: initialSetup.schedules.map((s) => {
           return s.schedule
         })
       })
     }
+    
   }, [initialSetup])
 
   const handleSubmit = (e) => {
-    console.log("Handle Submit");
     e.preventDefault();
-    dispatch(createBook({ ...formNewDate }))
-    console.log(formNewDate)
+    if(existingBookID){
+      dispatch(updateExistingBookDate( formNewDate, existingBookID, true))
+    } else {
+      dispatch(createBook({ ...formNewDate }))
+    }
     clear();
   }
 
@@ -94,12 +98,18 @@ const NewBookingDate = () => {
 
   return (
     <Paper sx={{ m: '1rem', p: '1rem', pb: '0.5rem' }} elevation={6}>
-        <Typography variant="h6" sx={{m: '1rem', mt: '0' }} elevation={6}>Buka tanggal baru</Typography>
+        <Typography variant="h6" sx={{m: '1rem', mt: '0' }} elevation={6}>{existingBookID ? 'Edit Tanggal Yang Ada': 'Buka tanggal baru'}</Typography>
         <form autoComplete='off' noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', minWidth: '40vw'}}>
             <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
+              {existingBookID ? (
+                <MobileDatePicker label="Open New Date" name="newdatebook" inputFormat="DD/MMM/YYYY dddd" value={formNewDate.bookingdate}
+                    onChange={handleDateChange} renderInput={(params) => <TextField {...params} required={true} size="small" />}  disabled={true}
+                />
+              ) : (
                 <MobileDatePicker label="Open New Date" name="newdatebook" inputFormat="DD/MMM/YYYY dddd" value={formNewDate.newdatebook}
                     onChange={handleDateChange} renderInput={(params) => <TextField {...params} required={true} size="small" />}
                 />
+              )}
             </LocalizationProvider>
             <TextField name="shifts" label="Jumlah Shift" type="number" min={1} max={3} value={formNewDate.shifts} required={true} size="small"
                 InputLabelProps={{ shrink: true, }}  sx={{ my: '1rem' }}

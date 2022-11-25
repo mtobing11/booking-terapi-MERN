@@ -21,15 +21,13 @@ const AnnounceControl = () => {
   }, [])
 
   useEffect(() => {
-    console.log(fetchAnnounceData)
     if(fetchAnnounceData){
       setAnnounceData({ message: fetchAnnounceData.message, duration: fetchAnnounceData.duration, status: fetchAnnounceData.status})
     }
   }, [fetchAnnounceData])
 
   const handleSubmit = (e) => {
-    console.log("Handle Submit");
-    // e.preventDefault();
+    e.preventDefault();
     dispatch(updateAnnouncement({ ...announceData}, announcementID))
   }
 

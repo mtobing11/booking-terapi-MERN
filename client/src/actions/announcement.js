@@ -1,9 +1,8 @@
 import * as api from '../api';
-import { CREATE_ANNOUNCEMENT, FETCH_ANNOUNCEMENT, FETCH_ANNOUNCEMENT_FOR_ADMIN,CLOSE_ANNOUNCEMENT } from '../constants/actionTypes';
+import { CREATE_ANNOUNCEMENT, FETCH_ANNOUNCEMENT, FETCH_ANNOUNCEMENT_FOR_ADMIN,CLOSE_ANNOUNCEMENT, UPDATE_ANNOUNCEMENT } from '../constants/actionTypes';
 
 export const fetchAnnouncement = (id) => async (dispatch) => {
     try {
-        console.clear();
         const { data } = await api.fetchAnnouncement(id);
         data["type"] = "opening";
         data["isTimeLimit"] = data.duration ? true : false;
@@ -30,7 +29,6 @@ export const closeAnnouncement = () => async (dispatch) => {
 
 export const createAnnouncement = (announcement) => async (dispatch) => {
     try {
-        console.log("making announce");
         const { data } = await api.createAnnouncement(announcement);
         console.log(data)
     } catch (error){
@@ -41,9 +39,8 @@ export const createAnnouncement = (announcement) => async (dispatch) => {
 
 export const updateAnnouncement = (announcement, id) => async (dispatch) => {
     try {
-        console.log("making announce");
         const { data } = await api.updateAnnouncement(announcement, id);
-        console.log(data);
+        dispatch({ type: UPDATE_ANNOUNCEMENT, payload: data })
     } catch (error){
         console.log('error di action announcement')
         console.log(error)
