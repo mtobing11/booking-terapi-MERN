@@ -14,6 +14,8 @@ export const makeAppointment = (book, dateID) => API.patch(`/books/${dateID}`, b
 export const fetchAppointment = (dateID, bookID, shift) => API.get(`/books/${dateID}/${bookID}/shift?shiftquery=${shift}`);
 
 export const createBook = (newBook) => API.post('/books', newBook);
+export const fetchCustomers = (date) => API.get(`/dashboard/date/${date}`);
+export const fetchInitialSetup = (id) => API.get(`/dashboard/initialsetup/${id}`);
 export const createInitialSetup = (newSetup) => API.post('/dashboard/initialsetup', newSetup);
 export const updateInitialSetup = (id, newSetup) => API.patch(`/dashboard/initialsetup/${id}`, newSetup);
 

@@ -12,55 +12,21 @@ import { CustomPaper } from './styles.js';
 // import actions
 import { getAvailableDates, makeAppointment } from '../../../actions/book';
 
+// functions
+import { phoneValidator } from '../../../utils/utils';
+
 const style = {
     display: 'flex',
     flexWrap: 'wrap',
     height: 250,
 }
 
-const phoneValidator = (phone) =>{
-    let standardNumber = standardizePhoneNumber(phone)
-    if (isCorrectFormat(standardNumber) && cellularProviderInIndonesia(standardNumber)){
-        return standardNumber
-    }
-    return null
-}
-
-const standardizePhoneNumber = (phone) => {
-    let phoneNumber = String(phone).trim();
-
-    if(phoneNumber.startsWith('+62')){
-        phoneNumber = '0' + phoneNumber.slice(3);
-    } else if (phoneNumber.startsWith('62')){
-        phoneNumber = '0' + phoneNumber.slice(2)
-    }
-
-    return phoneNumber.replace(/[- .]/g, "");
-}
-
-const isCorrectFormat = (phone) => {
-    if(!phone || !/^08[1-9][0-9]{7,10}$/.test(phone)){
-        return false
-    }
-    return true
-}
-
-const cellularProviderInIndonesia = (phone) =>{
-    const prefix = phone.slice(0, 4);
-    if (['0831', '0832', '0833', '0838'].includes(prefix)) return 'axis';
-    if (['0895', '0896', '0897', '0898', '0899'].includes(prefix)) return 'three';
-    if (['0817', '0818', '0819', '0859', '0878', '0877'].includes(prefix)) return 'xl';
-    if (['0814', '0815', '0816', '0855', '0856', '0857', '0858'].includes(prefix)) return 'indosat';
-    if (['0812', '0813', '0852', '0853', '0821', '0823', '0822', '0851', '0811'].includes(prefix)) return 'telkomsel';
-    if (['0881', '0882', '0883', '0884', '0885', '0886', '0887', '0888', '0889'].includes(prefix)) return 'smartfren';
-    if (['0840'].includes(prefix)) return 'untuk_percobaan';
-    return null;
-}
-
+// class
 const UserForm = () => {
     const dispatch = useDispatch();
     const [dateID, setDateID] = useState('');
     const [formData, setFormData] = useState({ name: '', cellphone: '', datebook: '', sessionbook: '', bookingcode: ''});
+    const [shifts, setShifts] = useState({shift1: "", shift2: "", shift3: ""})
     const availableDate = useSelector((state) => state.books.availableDate);
 
     useEffect(() => {
@@ -71,9 +37,13 @@ const UserForm = () => {
     }, [])
 
      useEffect(() => {
+        // console.log(availableDate)
         if(availableDate){
             setFormData({ ...formData, datebook: dayjs(availableDate[0].bookingdate)})
             setDateID(availableDate[0]._id)
+
+            let shiftsSchedule = availableDate[0].shiftInfo.schedules
+            setShifts({ ...shifts, shift1: shiftsSchedule[0], shift2: shiftsSchedule[1], shift3: shiftsSchedule[2] })
         }
     }, [availableDate])
 
@@ -84,8 +54,7 @@ const UserForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formattedPhone = phoneValidator(formData.cellphone)
-        console.log("handleSubmit")
-        console.log(formData)
+        // console.log(formData)
         dispatch(makeAppointment({ ...formData, cellphone: formattedPhone}, dateID))
         // clear();
     }
@@ -118,9 +87,13 @@ const UserForm = () => {
                             labelId="sessionbook" name="sessionbook" id="sessionbookId" required={true}  size="small"
                             value={formData.sessionbook} label="Pilih jam kunjungan" onChange={(e)=>setFormData({ ...formData, sessionbook: e.target.value })}
                         >
-                        <MenuItem value="shift1">10.30 - 12.30</MenuItem>
-                        <MenuItem value="shift2">15.00 - 17.00</MenuItem>
-                        <MenuItem value="shift3">19.00 - 21.00</MenuItem>
+                        <MenuItem value="shift1">{shifts.shift1}</MenuItem>
+                        {shifts.shift2 && (
+                            <MenuItem value="shift2">{shifts.shift2}</MenuItem>
+                        )}
+                        {shifts.shift3 && (
+                            <MenuItem value="shift3">{shifts.shift3}</MenuItem>
+                        )}
                         </Select>
                     </FormControl>
                 </Box>

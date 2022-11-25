@@ -12,18 +12,7 @@ import TableBasic from '../Tables/TableBasic';
 import { getAvailableDates } from '../../../../actions/book';
 
 // functions
-
-function formatDate(date){
-    let d = new Date(date),
-        month = '' + d.getMonth(),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    let monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-    let newDate = [day, monthName[month], year].join(' ');
-    return newDate
-}
+import { formattingDate } from '../../../../utils/utils';
 
 // class
 const BookingDateControl = () => {
@@ -45,8 +34,8 @@ const BookingDateControl = () => {
   useEffect(() => {
     if(availableDate){
       availableDate.map((item) => {
-        let newDate = formatDate(item.bookingdate, 'dmmy')
-        item.bookingdate = newDate
+        let newDate = formattingDate(new Date(item.bookingdate), 'dmmy')
+        item.bookingdate = newDate;
       })
       setDataAvailable(availableDate)
     }
@@ -56,11 +45,11 @@ const BookingDateControl = () => {
     <Paper elevation={1} sx={{ m: '0.75rem', p: '0.5rem', borderRadius: '1.5rem' }}>
         <Header category="Page" title="Booking Date" />
         
+        <NewBookingDate />
         <Paper sx={{m: '1rem',p: '1rem'}} elevation={6}>
             <Typography variant="h6" sx={{m: '1rem'}} elevation={6}>Tanggal yang sedang dibuka</Typography>
             <TableBasic header={['Tanggal', 'Jumlah Shift', 'Max / shift', 'Max Booking / HP', 'Status' ]} content={dataAvailable} />
         </Paper>
-        <NewBookingDate />
     </Paper>
   )
 }

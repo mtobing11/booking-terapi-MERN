@@ -24,6 +24,7 @@ const Home = () => {
     const isAnnounce = useSelector((state) => state.announcements.isAnnounce);
     const arrAnnounce = useSelector((state) => state.announcements.announceData.length);
     const isCreateTicket = useSelector((state) => state.books.isCreateTicket);
+    const shifts = useSelector((state) => state.books.shifts);
     const announcementID = '63736bef3dda6cf66d20d536';
 
     useEffect(() => {
@@ -32,6 +33,8 @@ const Home = () => {
 
     useEffect(() => {
         if(fetchTicketData){
+            let schedule = handleShiftToTime(fetchTicketData.shift);
+            
             setTicketData({
                 ...ticketData,
                 name: fetchTicketData.name, 
@@ -39,7 +42,7 @@ const Home = () => {
                 bookingcode: fetchTicketData.bookingcode, 
                 bookingdate: fetchTicketData.bookingdate,
                 index: fetchTicketData.index, 
-                shift: fetchTicketData.shift, 
+                shift: schedule, 
                 timestamp: fetchTicketData.timestamp, 
                 id: fetchTicketData.id
             })
@@ -47,11 +50,7 @@ const Home = () => {
     }, [isCreateTicket])
 
     useEffect(() => {
-        console.log("isAnnounce:", isAnnounce)
-        // console.log("Announce length:", arrAnnounce)
-        console.log(fetchAnnounceData)
         if(fetchAnnounceData){
-            console.log("Announce")
             let announcementType = fetchAnnounceData.type;
             setAnnounceData({...announceData, message: fetchAnnounceData.message, duration: fetchAnnounceData.duration})
             setIsTimeLimit(fetchAnnounceData.isTimeLimit);
@@ -65,7 +64,7 @@ const Home = () => {
                 case 'info':
                     return setTitle("Silahkan Tunggu")
                 default:
-                    return setTitle("Info")
+                    return setTitle("Info..")
             }
         } else {
             setIsTimeLimit(false);
@@ -75,8 +74,9 @@ const Home = () => {
         
     }, [arrAnnounce]);
 
-    const handleAnnounceData = () => {
-        setAnnounceData({...announceData, message: fetchAnnounceData.message, duration: fetchAnnounceData.duration})
+    const handleShiftToTime = (shift) => {
+        let schedule = shift === 'shift1' ? shifts[0] : 'shift2' ? shifts[1] : 'shift3' ? shifts[2] : 'something wrong';
+        return schedule 
     }
 
     return (

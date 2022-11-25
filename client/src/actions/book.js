@@ -1,43 +1,6 @@
 import * as api from '../api';
-import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT } from '../constants/actionTypes';
-
-// functions
-function addZeroToDate(num){
-    if (num <=9){
-        return "0" + num;
-    }
-    return num
-}
-
-function formatDate(date, arrFormat){
-    let day = addZeroToDate(date.getDate()),
-        month = addZeroToDate(date.getMonth() + 1),
-        year = date.getFullYear(), 
-        dayIndex = date.getDay(),
-        hour = addZeroToDate(date.getHours()),
-        minute = addZeroToDate(date.getMinutes()),
-        second = addZeroToDate(date.getSeconds()),
-        millisecond = date.getMilliseconds();
-
-    let monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agst', 'Sep', 'Okt', 'Nov', 'Des'];
-    let dayNameInIndonesia = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
-
-    if (arrFormat == "ymd"){
-        return [year, month, day].join('-');
-    } else if (arrFormat == "ymd-time"){
-        let formatDate = [year, month, day].join("-");
-        let formatTime = [hour, minute, second].join(":");
-        return [formatDate, formatTime, dayNameInIndonesia[dayIndex]].join(' ');
-    } else if (arrFormat == "dmmy"){
-        return [day, monthName[month-1], year].join(' ');
-    }
-
-    let formatDate = [day, month, year].join("-");
-    let formatTime = [hour, minute, second].join(":");
-
-    return [formatDate, formatTime, dayNameInIndonesia[dayIndex]].join(' ');
-}
-
+import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT, FETCH_SHIFTS } from '../constants/actionTypes';
+import { formattingDate } from '../utils/utils'
 
 // actions
 export const getAvailableDates = (date) => async (dispatch) =>{
@@ -48,7 +11,8 @@ export const getAvailableDates = (date) => async (dispatch) =>{
             return dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "Maaf, saat ini semua tanggal sudah penuh", type: "err_data"} })
         }
         
-        dispatch({ type: FETCH_ALL_DATES, payload: data })   
+        dispatch({ type: FETCH_ALL_DATES, payload: data });
+        dispatch({ type: FETCH_SHIFTS, payload: data[0].shiftInfo.schedules });
     } catch (error) {
         if(error.response?.status === 404) {
             console.log(error.response.data)
@@ -59,8 +23,6 @@ export const getAvailableDates = (date) => async (dispatch) =>{
 }
 
 export const makeAppointment = (book, dateID) => async (dispatch) => {
-    console.log("check phone format:", book.cellphone)
-
     try {
         dispatch({ 
             type: FETCH_ANNOUNCEMENT, 
@@ -91,8 +53,10 @@ export const makeAppointment = (book, dateID) => async (dispatch) => {
         console.log("already get the fetch appoinmnet")
         console.log(dataBooked.data)
 
-        const formattedDate = formatDate(new Date(dataBooked.data.bookingdate), 'dmmy')
-        const formattedTimestamp = formatDate(new Date(dataBooked.data.timestamp), 'dmmmy')
+        const formattedDate = formattingDate(new Date(dataBooked.data.bookingdate), 'dmmy')
+        const formattedTimestamp = formattingDate(new Date(dataBooked.data.timestamp), 'dmmmy')
+        // const formattedDate = formatDate(new Date(dataBooked.data.bookingdate), 'dmmy')
+        // const formattedTimestamp = formatDate(new Date(dataBooked.data.timestamp), 'dmmmy')
         const newDataChangeDateFormat = { ...dataBooked.data, bookingdate: formattedDate, timestamp: formattedTimestamp}
         
         await dispatch({ type: CLOSE_ANNOUNCEMENT})

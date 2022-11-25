@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import components
 import { Paper, TextField, Button } from '@mui/material';
 import Header from '../Header/Header';
 
 // import actions
-import { createInitialSetup, updateInitialSetup } from '../../../../actions/dashboardMenu';
+import { createInitialSetup, updateInitialSetup, getInitialSetup } from '../../../../actions/dashboardMenu';
 
 // initial states
 const setup = {  
@@ -23,13 +23,27 @@ const InitialSetup = () => {
   const id = "637d11df564a6ec83703ce95";
   const dispatch = useDispatch();
   const [dataSetup, setDataSetup] = useState(setup);
+  const setupBefore = useSelector((state) => state.dashboard?.initialSetup);
+
+  useEffect(() => {
+    dispatch(getInitialSetup(id));
+  }, [])
+
+  useEffect(() => {
+    if(setupBefore){
+      setDataSetup({
+        ...dataSetup, max: setupBefore.max, maxbooking: setupBefore.maxbooking, shifts: setupBefore.shifts, 
+        schedules: setupBefore.schedules.map((s) => s )
+      })
+    }
+  }, [setupBefore])
 
   const handleSubmit = (e) => {
     console.log("Handle Submit");
     e.preventDefault();
     dispatch(updateInitialSetup(id, { ...dataSetup }))
     // dispatch(createInitialSetup({ ...dataSetup }))
-    // console.log(formNewDate)
+
     clear();
   }
 

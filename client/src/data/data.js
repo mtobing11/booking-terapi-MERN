@@ -24,14 +24,14 @@ export const links = [
         link: 'bookingdate',
       },
       {
-        name: 'customers today',
+        name: 'List today',
         icon: <FontAwesomeIcon icon={faPeopleGroup} />,
-        link: 'customerstoday',
+        link: 'displaycustomerstoday',
       },
       {
-        name: 'customers tomorrow',
+        name: 'List tomorrow',
         icon: <FontAwesomeIcon icon={faUserCheck} />,
-        link: 'customersnextday',
+        link: 'displaycustomersnextday',
       },
       {
         name: 'Announce Message',

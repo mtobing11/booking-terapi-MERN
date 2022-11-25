@@ -21,12 +21,12 @@ const Auth = () => {
   const [isSignup, setIsSignup] = useState(false);
   const [formData, setFormData] = useState(initialState);
 
-  // useEffect(() => {
-  //   console.log(navigate); 
-  //   setTimeout(() => {
-  //     navigate('/test')
-  //   }, 2000)
-  // }, [])
+  useEffect(() => {
+    if(user){
+      console.log('logout automatically');
+      navigate('/dashboard');
+    }
+  }, [])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -34,7 +34,6 @@ const Auth = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
 
     isSignup ? dispatch(signup(formData, navigate)) : dispatch(signin(formData, navigate))
   }
@@ -42,7 +41,7 @@ const Auth = () => {
   const handleShowPassword = () => setShowPassword((prevShowPassword) => !prevShowPassword)
 
   const switchMode = () => { setIsSignup((prevIsSignup) => !prevIsSignup) }
-
+  console.log('user in Auth:', user)
   return (
     <Container component='main' maxWidth='xs'>
         <Paper elevation={3} sx={{display: 'flex', flexDirection: 'column', alignItems: 'center', mt:'2rem', p: '0.5rem'}}>

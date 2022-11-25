@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import decode from 'jwt-decode';
 
 // import components
 import Sidebar from '../Sidebar/Sidebar';
@@ -13,16 +14,39 @@ const stylePage = {
 }
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [style1] = useState(stylePage);
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')))
   const activeMenu = useSelector((state) => state.dashboard.activeMenu);
-  const user = JSON.parse(localStorage.getItem('profile'))
 
   useEffect(() => {
     if(!user){
-      navigate('/auth')
+      console.log('logout automatically');
+      navigate('/auth');
     }
-  }, [user])
+  }, []);
+
+  useEffect(() => {
+      const token = user?.token;
+
+      if(token) {
+          const decodedToken = decode(token);
+          // console.log(decodedToken);
+          if(decodedToken.exp * 1000 < new Date().getTime()) logout()
+      }
+
+      setUser(JSON.parse(localStorage.getItem('profile')))
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location])
+
+  const logout = () => {
+    dispatch({ type: 'LOGOUT' });
+    navigate('/auth');
+    setUser(null)
+  }
 
   return (
     <div style={style1}>
@@ -35,7 +59,7 @@ const Dashboard = () => {
           <Sidebar />
         </div>
       )}
-      <div style={{ marginLeft: activeMenu ? '250px' : '0px' }}>
+      <div style={{ marginLeft: activeMenu ? '250px' : '0px', marginRight: '1rem', width: '100%' }}>
         <Navbar />
         <Outlet />
       </div>

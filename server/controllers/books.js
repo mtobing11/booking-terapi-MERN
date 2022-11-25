@@ -1,30 +1,20 @@
 import mongoose from 'mongoose';
 import BookForm25 from '../models/book25.js';
 
-function formatDate(date){
-    let d = new Date(date),
-        month = '' + d.getMonth(),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    let monthName = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-    let newDate = [day, monthName[month], year].join(' ');
-    return new Date(newDate)
-}
+// functions
+import { formatDate } from '../utils/utils.js';
 
 // open new date for booking
 export const createBook = async (req, res) => {
-    if(!req.userId) return res.json({ message: 'Unauthenticated' })
-    const user = JSON.parse(localStorage.getItem('profile'));
-    const creator = user.useData.name;
+    if(!req.userId) return res.json({ message: 'Unauthenticated' });
+    console.log("req.body")
+    console.log(req.body)
 
+    const { creator, maxbooking, shifts } = req.body;
     const bookingdate = req.body.newdatebook;
     const max = req.body.capacitybook;
-    const maxbooking = req.body.maxbooking;
-    const shifts = req.body.shifts;
-    const schedule = req.body.schedule;
-    const shiftInfo = { quantity: shifts, schedule }
+    const schedules = req.body.schedule;
+    const shiftInfo = { quantity: shifts, schedules }
 
     const newBook = await BookForm25({bookingdate: new Date(bookingdate).toISOString(), max: max, maxbooking, shiftInfo, creator});
     console.log(newBook)
@@ -45,8 +35,6 @@ export const getDates = async (req, res) => {
 
     try {
         const arr = await BookForm25.find({ $and: [{ bookingdate: { $gte: newDate} }, { available: true }] })
-        // if(arr.length < 1) return res.status(404).send({message: "Saat ini semua tanggal masih penuh"})
-        // if(arr.length < 1) return res.json({message: "Saat ini semua tanggal masih penuh", type: "err_data"})
         res.json(arr)
     } catch (error) {
         res.status(409).json({ message: err.message });

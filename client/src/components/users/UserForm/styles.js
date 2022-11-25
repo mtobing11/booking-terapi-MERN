@@ -1,5 +1,5 @@
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
-import { Paper, Slider, Typography } from '@mui/material';
+import { Paper, Typography } from '@mui/material';
 
 const CustomPaper = styled(Paper)`
     padding: 2rem;

@@ -12,7 +12,7 @@ import { handleActiveMenu, handleResizeScreen } from '../../../../actions/dashbo
 
 // style
 const styleNavbar = {
-  position: 'relative', display: 'flex', justifyContent: 'space-between', padding: '0.5rem', marginLeft: '1.5rem', marginRight: '1.5rem',
+  position: 'relative', display: 'flex', justifyContent: 'space-between', padding: '0.5rem', marginLeft: '1.5rem', marginRight: '1.5rem'
 }
 const styleProfileWrapper = {
   display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.25rem', borderRadius: '0.5rem',
@@ -61,7 +61,7 @@ const Navbar = () => {
             <Avatar src={avatar} />
             <div style={{ display: 'flex' }}>
               <Typography sx={{mr: '0.25rem'}} variant="body2" align="center">Hi</Typography>
-              <Typography variant="body2" align="center">{user.userData.name}</Typography>
+              <Typography variant="body2" align="center">{user?.userData?.name}</Typography>
             </div>
           </div>
         </Tooltip>

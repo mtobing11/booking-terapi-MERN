@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 // import components
-import { Box, Button, Typography, Modal, LinearProgress, Fade } from '@mui/material';
+import { Box, Modal, LinearProgress, Fade } from '@mui/material';
 import { closeAnnouncement } from '../../../actions/announcement';
 import { closeTicket } from '../../../actions/book';
 import { TitleTypography, ContentTypography, NoteTypography } from './styles';
@@ -25,12 +25,13 @@ const styleBase = {
 const AnnouncementModal = ({ status, title, message, isShowProgress=false, isTimeLimit, duration, ticket, isTicket }) => {
   const dispatch = useDispatch()
   const [style, setStyle] = useState(styleBase);
+  const shifts = useSelector((state) => state.books.shifts)
 
   const handleClose = () => {
     // button close only work if no duration and when still in progress 
-    console.log("close button")
+    // console.log("close button")
     if(!isTimeLimit && !isShowProgress){
-      console.log("close info")
+      // console.log("close info")
       dispatch(closeAnnouncement())
       dispatch((closeTicket()))
     }
@@ -46,9 +47,9 @@ const AnnouncementModal = ({ status, title, message, isShowProgress=false, isTim
         let endSeconds = Math.floor(end % (1000 * 60)) / 1000;
         let distance = endSeconds - beginSeconds;
         // console.log(distance)
-        if (distance > duration - 7){
+        if (distance > duration){
           clearInterval(x);
-          console.log("close bacause of time out");
+          // console.log("close because of time out");
           dispatch(closeAnnouncement());
         }
       })
@@ -72,7 +73,7 @@ const AnnouncementModal = ({ status, title, message, isShowProgress=false, isTim
                     <ContentTypography sx={{ mt: 2}}><span style={{color: '#A0A0A0'}}>Nama</span>: {ticket.name}</ContentTypography>
                     <ContentTypography sx={{ mt: 1}}><span style={{color: '#A0A0A0'}}>No HP</span>: 0{ticket.cellphone}</ContentTypography>
                     <ContentTypography sx={{ mt: 1}}><span style={{color: '#A0A0A0'}}>Tanggal</span>: {ticket.bookingdate}</ContentTypography>
-                    <ContentTypography sx={{ mt: 1}}><span style={{color: '#A0A0A0'}}>Tanggal</span>: {ticket.shift}</ContentTypography>
+                    <ContentTypography sx={{ mt: 1}}><span style={{color: '#A0A0A0'}}>Jam</span>: {ticket.shift}</ContentTypography>
                     <ContentTypography sx={{ mt: 1}}><span style={{color: '#A0A0A0'}}>No urut</span>: {ticket.index + 1}</ContentTypography>
                     <ContentTypography sx={{ mt: 4}}>Harap screencapture dan simpan pesan ini</ContentTypography>
                     <NoteTypography sx={{ mt: 1}}>booked at {ticket.timestamp}</NoteTypography>

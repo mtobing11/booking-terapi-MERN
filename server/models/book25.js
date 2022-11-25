@@ -20,7 +20,7 @@ const book25Schema = mongoose.Schema({
     },
     shiftInfo: {
         quantity: { type: Number, default: 3},
-        schedule: []
+        schedules: []
     },
     shift1Available: {
         type: Boolean,

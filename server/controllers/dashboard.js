@@ -1,15 +1,10 @@
 import mongoose from 'mongoose';
 import AnnouncementForm from '../models/announce.js';
 import InitialSetup from '../models/initialSetup.js';
+import BookForm25 from '../models/book25.js';
 
 // functions
-const changeArrofObject = (arr, val, idx) => {
-    let tempArr = [...arr];
-    let obj = tempArr[idx];
-    obj.schedule = val;
-    tempArr[idx] = obj
-    return tempArr
-  }
+import { formatDate } from '../utils/utils.js'
 
 // fetch if there is an opening massage
 export const getAnnouncement = async (req, res) => {
@@ -21,7 +16,7 @@ export const getAnnouncement = async (req, res) => {
         const announcement = await AnnouncementForm.findById(id);
         res.json(announcement)
     } catch (error) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -35,8 +30,8 @@ export const createAnnouncement = async (req, res) => {
     try {
         await announcement.save()
         res.status(201).json(announcement)
-    } catch (err) {
-        res.status(409).json({ message: err.message });
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -53,7 +48,7 @@ export const updateAnnouncement = async (req, res) => {
         const announcement = await AnnouncementForm.findByIdAndUpdate(id, {duration, message, status, timestamp: new Date()}, {new: true});
         res.status(201).json(announcement)
     } catch (error) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -67,7 +62,7 @@ export const getInitialSetup = async (req, res) => {
         const setup = await InitialSetup.findById(id);
         res.json(setup)
     } catch (error) {
-        res.status(409).json({ message: err.message });
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -83,9 +78,10 @@ export const createInitialSetup = async (req, res) => {
     try {
         await initialSetup.save()
         console.log(newSetup)
-        res.status(201).json(initialSetup)
-    } catch (err) {
-        res.status(409).json({ message: err.message });
+        res.json(initialSetup)
+        // res.status(201).json(initialSetup)
+    } catch (error) {
+        res.status(409).json({ message: error.message });
     }
 }
 
@@ -120,5 +116,21 @@ export const updateInitialSetup = async (req, res) => {
         res.status(201).json(newSetup)
     } catch (error) {
         res.status(409).json({ message: error.message });
+    }
+}
+
+// fetch customers data
+export const getCustomers = async (req, res) => {
+    console.log("Get customer");
+
+    const { date: getDate } = req.params;
+    let newDate = formatDate(getDate);
+
+    try {
+        const arr = await BookForm25.find({ $and: [{ bookingdate: { $gte: newDate} }, { available: true }] })
+
+        res.json(arr)
+    } catch (error) {
+        res.status(409).json({ message: err.message });
     }
 }
