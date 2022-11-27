@@ -33,6 +33,8 @@ const BookingDateControl = () => {
   }, [])
 
   useEffect(() => {
+    // console.log("available in dashboard:")
+    // console.log(availableDate);
     if(availableDate){
       availableDate.map((item) => {
         let newDate = formattingDate(new Date(item.bookingdate), 'dmmy')

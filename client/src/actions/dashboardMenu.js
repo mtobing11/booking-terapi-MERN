@@ -30,7 +30,7 @@ export const createBook = (book) => async (dispatch) => {
 export const deleteDate = (id) => async (dispatch) => {
     try {
         await api.deleteDate(id);
-        dispatch({ type: DELETE, payload: id})
+        dispatch({ type: DELETE, payload: id});
     } catch (error) {
         console.log(error);
     }

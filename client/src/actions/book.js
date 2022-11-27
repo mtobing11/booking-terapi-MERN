@@ -6,7 +6,6 @@ import { formattingDate } from '../utils/utils';
 export const getAvailableDates = (date) => async (dispatch) =>{
     try {
         const { data } = await api.fetchDates(date);
-        
         if(data.length < 1){
             return dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "Maaf, saat ini semua tanggal sudah penuh", type: "err_data"} })
         }
@@ -14,11 +13,7 @@ export const getAvailableDates = (date) => async (dispatch) =>{
         dispatch({ type: FETCH_ALL_DATES, payload: data });
         dispatch({ type: FETCH_SHIFTS, payload: data[0].shiftInfo.schedules });
     } catch (error) {
-        if(error.response?.status === 404) {
-            console.log(error.response.data)
-        } else {
-            console.log(error)
-        }
+        console.log(error)
     }
 }
 
@@ -26,14 +21,9 @@ export const getAvailableDates = (date) => async (dispatch) =>{
 export const getAllDates = (date) => async (dispatch) =>{
     try {
         const { data } = await api.fetchAllDates(date);
-        
         dispatch({ type: FETCH_ALL_DATES, payload: data });
     } catch (error) {
-        if(error.response?.status === 404) {
-            console.log(error.response.data)
-        } else {
-            console.log(error)
-        }
+        console.log(error)
     }
 }
 
@@ -53,6 +43,10 @@ export const makeAppointment = (book, dateID) => async (dispatch) => {
             dispatch({ type: CLOSE_ANNOUNCEMENT})
             return dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "No HP salah, harap input no HP lagi", type: "err_data"} })
         }
+        if(!dateID){
+            dispatch({ type: CLOSE_ANNOUNCEMENT})
+            return dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "Tanggal tsb booking sedang ditutup", type: "err_data"} })
+        }
 
         const { data } = await api.makeAppointment(book, dateID);
         const shift = book.sessionbook;
@@ -64,9 +58,6 @@ export const makeAppointment = (book, dateID) => async (dispatch) => {
 
 
         const dataBooked = await api.fetchAppointment(dateID, data, shift)
-
-        console.log("already get the fetch appoinmnet")
-        console.log(dataBooked.data)
 
         const formattedDate = formattingDate(new Date(dataBooked.data.bookingdate), 'dmmy')
         const formattedTimestamp = formattingDate(new Date(dataBooked.data.timestamp), 'dmmmy')

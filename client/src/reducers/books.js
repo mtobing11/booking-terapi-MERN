@@ -14,12 +14,16 @@ export default(state = { isProcessing: false, isCreateTicket: false, availableDa
             return { ...state, isCreateTicket: true, ticketData: action.payload }
         case CLOSE_TICKET:
             return { ...state, isCreateTicket: false, ticketData: {} }
-        case CREATE_BOOK: 
+        case CREATE_BOOK: {
+            console.log("add date")
             return { ...state, availableDate: [...state.availableDate, action.payload] }
+        }
         case UPDATE_DATA: 
             return { ...state, availableDate: state.availableDate.map((date) => date._id === action.payload._id ? action.payload : date) }
-        case DELETE:
+        case DELETE: {
+            console.log("delete date")
             return { ...state, availableDate: state.availableDate.filter((date) => date._id !== action.payload) }
+        }
         default:
             return state;
     }

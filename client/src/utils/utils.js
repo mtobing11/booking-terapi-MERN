@@ -86,3 +86,19 @@ export const phoneValidator = (phone) => {
 
     return null
 } 
+
+// set limit booking date
+export const maxDate = (maxNum) => {
+    let today = new Date();
+    let maxDay = today.addDays(maxNum);
+
+    
+    return maxDay;
+}
+
+// Prototype Date for limit booking date
+Date.prototype.addDays = function(days){
+    let date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date
+}

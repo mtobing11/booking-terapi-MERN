@@ -15,7 +15,7 @@ export const createBook = async (req, res) => {
     const shiftInfo = { quantity: shifts, schedules }
 
     const newBook = await BookForm25({bookingdate: new Date(bookingdate).toISOString(), max: max, maxbooking, shiftInfo, creator});
-    console.log(newBook)
+    
     try {
         await newBook.save()
         res.status(201).json(newBook)
@@ -160,6 +160,7 @@ export const getAppointment = async (req, res) => {
             newData.shift = shiftquery;
             newData.index = index;
             newData.id = book._id;
+            console.log("end")
         }
         
         res.json(newData);

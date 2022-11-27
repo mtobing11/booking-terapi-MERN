@@ -11,11 +11,7 @@ export const fetchAnnouncement = (id) => async (dispatch) => {
         }
         dispatch({ type: FETCH_ANNOUNCEMENT_FOR_ADMIN, payload: data })   
     } catch (error) {
-        if(error.response.status === 404) {
-            console.log(error.response.data)
-        } else {
-            console.log(error);
-        }
+        console.log(error);
     }
 }
 
@@ -32,7 +28,6 @@ export const createAnnouncement = (announcement) => async (dispatch) => {
         const { data } = await api.createAnnouncement(announcement);
         console.log(data)
     } catch (error){
-        console.log('error di action announcement')
         console.log(error)
     }
 }
@@ -42,7 +37,6 @@ export const updateAnnouncement = (announcement, id) => async (dispatch) => {
         const { data } = await api.updateAnnouncement(announcement, id);
         dispatch({ type: UPDATE_ANNOUNCEMENT, payload: data })
     } catch (error){
-        console.log('error di action announcement')
         console.log(error)
     }
 }

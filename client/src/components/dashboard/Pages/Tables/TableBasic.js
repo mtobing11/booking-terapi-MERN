@@ -8,7 +8,7 @@ import BasicMenu from './BasicMenu';
 
 const TableBasic = ({ header, content }) => {
   const [contentArr, setContentArr] = useState([])
-  const [myAction, setMyAction] = useState("null")
+  // const [myAction, setMyAction] = useState("null")
 
   useEffect(() => {
     if(content){

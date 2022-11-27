@@ -37,7 +37,7 @@ const AnnounceControl = () => {
         <Paper sx={{m: '1rem',p: '1rem'}} elevation={6}>
           <form autoComplete='off' noValidate onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', minWidth: '40vw'}}>
             <TextareaAutosize  minRows={4} maxRows={8} name="message" label="Message to display" type="string" value={announceData.message}
-              InputLabelProps={{ shrink: true }}  sx={{ my: '1rem' }} required={true} style={{ fontSize: 20, padding: 10}}
+              sx={{ my: '1rem' }} required={true} style={{ fontSize: 20, padding: 10}}
               onChange={(e)=> setAnnounceData({ ...announceData, message: e.target.value })}
             />
             <TextField name="duration" label="Durasi (detik)" type="number" value={announceData.duration} required={true} size="small"

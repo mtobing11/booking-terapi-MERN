@@ -8,9 +8,12 @@ import bookRoutes from './routes/books.js';
 import dashboardRoutes from './routes/dashboard.js';
 import users from './routes/users.js';
 
+import requireHTTPS from './middleware/redirectToSecure.js';
+
 const app = express();
 dotenv.config();
 
+app.use(requireHTTPS);
 app.use(bodyParser.json({ limit: "30mb", extended: true }))
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }))
 app.use(cors())

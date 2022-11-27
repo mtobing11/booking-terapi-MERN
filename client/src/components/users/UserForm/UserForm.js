@@ -8,12 +8,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 import { TextField, Box, InputLabel, MenuItem, FormControl, Select, Button } from '@mui/material';
 import { CustomPaper } from './styles.js';
+import SnackBar from './SnackBar';
 
 // import actions
 import { getAvailableDates, makeAppointment } from '../../../actions/book';
 
 // functions
-import { phoneValidator } from '../../../utils/utils';
+import { phoneValidator, maxDate } from '../../../utils/utils';
 
 const style = {
     display: 'flex',
@@ -21,13 +22,18 @@ const style = {
     height: 250,
 }
 
+const initialStateForm = { name: '', cellphone: '', datebook: '', sessionbook: '', bookingcode: '', dateID: ''}
+const initialStateData = { bookingdate: '', dateID: '', shifts: 3, shift1: '', shift2: '', shift3: '' }
+
 // class
 const UserForm = () => {
     const dispatch = useDispatch();
-    const [dateID, setDateID] = useState('');
-    const [formData, setFormData] = useState({ name: '', cellphone: '', datebook: '', sessionbook: '', bookingcode: ''});
+    // const [dateID, setDateID] = useState('');
+    const [formData, setFormData] = useState(initialStateForm);
+    const [currData, setCurrData] = useState(initialStateData);
+    const [isAlert, setIsAlert] = useState(false);
     const [shifts, setShifts] = useState({shift1: "", shift2: "", shift3: ""})
-    const availableDate = useSelector((state) => state.books?.availableDate);
+    const availableDate = useSelector((state) => state.books.availableDate);
 
     useEffect(() => {
         let dateNow = new Date();
@@ -36,39 +42,49 @@ const UserForm = () => {
         dispatch(getAvailableDates(dayjs(new Date(dateNow))))
     }, [])
 
-     useEffect(() => {
-        // console.log(availableDate)
+    useEffect(() => {
+        console.log('Available in client:')
+        console.log(availableDate)
         if(availableDate.length > 0){
-            setFormData({ ...formData, datebook: dayjs(availableDate[0].bookingdate)})
-            setDateID(availableDate[0]._id)
-
-            let shiftsSchedule = availableDate[0].shiftInfo.schedules
-            setShifts({ ...shifts, shift1: shiftsSchedule[0], shift2: shiftsSchedule[1], shift3: shiftsSchedule[2] })
-        } else {
-            setFormData({ ...formData, datebook: ''})
+            setCurrData({
+                bookingdate: dayjs(availableDate[0]?.bookingdate), dateID: availableDate[0]?._id, shifts: availableDate[0]?.shiftInfo?.quantity, 
+                shift1: availableDate[0]?.shiftInfo?.schedules[0], shift2: availableDate[0]?.shiftInfo?.schedules[1], 
+                shift3: availableDate[0]?.shiftInfo?.schedules[2]
+            })
         }
     }, [availableDate])
 
-    const handleChange = (newValue) => {
-        setFormData({ ...formData, datebook: newValue})
+    useEffect(() => {
+        setFormData({ ...formData, datebook: currData.bookingdate, dateID: currData.dateID })
+        setShifts({ shift1: currData.shift1, shift2: currData.shift2, shift3: currData.shift3 })
+    }, [currData])
+
+    const handleDateChange = (e) => {
+        console.log(e.target?.value)
+        if(!e.target?.value){
+            setIsAlert(true);
+        }
+        setFormData({ ...formData, datebook: e.target?.value})
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const formattedPhone = phoneValidator(formData.cellphone)
         // console.log(formData)
-        dispatch(makeAppointment({ ...formData, cellphone: formattedPhone}, dateID))
+        dispatch(makeAppointment({ ...formData, cellphone: formattedPhone}, formData.dateID))
         // clear();
     }
 
     const isWeekend = (date) => {
         const day = date.day();
-
-        return day === 0 || day === 1 || day === 6
+        const max = maxDate(6);
+        
+        return day === 0 || day === 1 || day === 6 || date > max
     };
 
     return (
         <CustomPaper elevation={6}>
+            <SnackBar isAlert={isAlert} setIsAlert={setIsAlert} />
             <form autoComplete='off' noValidate onSubmit={handleSubmit} style={style}>
                 <TextField name="name" label="Nama" variant="outlined" required={true} size="small"
                     fullWidth value={formData.name} onChange={(e)=> setFormData({ ...formData, name: e.target.value })} 
@@ -79,7 +95,7 @@ const UserForm = () => {
                 <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
                     <MobileDatePicker label="Tanggal datang"
                         name="datebook" inputFormat="DD/MMM/YYYY" value={formData.datebook} shouldDisableDate={isWeekend} disabled={true} 
-                        disablePast={true} onChange={handleChange} renderInput={(params) => <TextField {...params}  size="small" fullWidth />}
+                        disablePast={true} onChange={(e) => handleDateChange(e)} renderInput={(params) => <TextField {...params}  size="small" fullWidth />}
                     />
                 </LocalizationProvider>
                 <Box sx={{ width: 1 }}>

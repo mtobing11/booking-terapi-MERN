@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import component
-import { Grow, Container, Grid, Card, CardMedia, Paper } from '@mui/material';
+import { Grow, Container, Grid, CardMedia, Paper } from '@mui/material';
 import FrontTitle from '../FrontTitle/FrontTitle';
 import Footer from '../Footer/Footer';
 import UserForm from '../UserForm/UserForm';
