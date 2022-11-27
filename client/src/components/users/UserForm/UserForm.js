@@ -34,17 +34,16 @@ const UserForm = () => {
     const [isAlert, setIsAlert] = useState(false);
     const [shifts, setShifts] = useState({shift1: "", shift2: "", shift3: ""})
     const availableDate = useSelector((state) => state.books.availableDate);
+    const needRefresh = useSelector((state) => state.books.needRefresh);
 
     useEffect(() => {
-        let dateNow = new Date();
-        dateNow.setDate(dateNow.getDate() + 1);
-
-        dispatch(getAvailableDates(dayjs(new Date(dateNow))))
+        getDataFromServer()
     }, [])
 
     useEffect(() => {
         console.log('Available in client:')
         console.log(availableDate)
+        
         if(availableDate.length > 0){
             setCurrData({
                 bookingdate: dayjs(availableDate[0]?.bookingdate), dateID: availableDate[0]?._id, shifts: availableDate[0]?.shiftInfo?.quantity, 
@@ -58,6 +57,12 @@ const UserForm = () => {
         setFormData({ ...formData, datebook: currData.bookingdate, dateID: currData.dateID })
         setShifts({ shift1: currData.shift1, shift2: currData.shift2, shift3: currData.shift3 })
     }, [currData])
+    
+    useEffect(() => {
+        if(needRefresh){
+            getDataFromServer()
+        }
+    }, [needRefresh])
 
     const handleDateChange = (e) => {
         console.log(e.target?.value)
@@ -73,6 +78,13 @@ const UserForm = () => {
         // console.log(formData)
         dispatch(makeAppointment({ ...formData, cellphone: formattedPhone}, formData.dateID))
         // clear();
+    }
+
+    const getDataFromServer = () => {
+        let dateNow = new Date();
+        dateNow.setDate(dateNow.getDate() + 1);
+
+        dispatch(getAvailableDates(dayjs(new Date(dateNow))))
     }
 
     const isWeekend = (date) => {

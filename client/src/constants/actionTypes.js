@@ -8,6 +8,8 @@ export const FETCH_SHIFTS = 'FETCH_SHIFTS';
 export const RESET = 'RESET';
 export const DELETE = 'DELETE';
 export const UPDATE_DATA = 'UPDATE_DATA';
+export const FRESH_FALSE = 'FRESH_FALSE';
+export const FRESH_TRUE = 'FRESH_TRUE';
 
 export const CREATE_TICKET = 'CREATE_TICKET';
 export const CLOSE_TICKET = 'CLOSE_TICKET';

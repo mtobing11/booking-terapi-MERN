@@ -1,9 +1,10 @@
 import * as api from '../api';
-import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT, FETCH_SHIFTS } from '../constants/actionTypes';
+import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT, FETCH_SHIFTS, FRESH_TRUE, FRESH_FALSE} from '../constants/actionTypes';
 import { formattingDate } from '../utils/utils';
 
 // get available dates
 export const getAvailableDates = (date) => async (dispatch) =>{
+    dispatch({ type: FRESH_FALSE})
     try {
         const { data } = await api.fetchDates(date);
         if(data.length < 1){
@@ -81,4 +82,8 @@ export const closeTicket = () => async (dispatch) => {
     } catch (error) {
         console.log(error)
     }
+}
+
+export const refreshPage = () => (dispatch) => {
+    dispatch({ type: FRESH_TRUE})
 }

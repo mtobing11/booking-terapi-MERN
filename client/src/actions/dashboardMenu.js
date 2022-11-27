@@ -20,6 +20,12 @@ export const createBook = (book) => async (dispatch) => {
 
     try {
         const { data } = await api.createBook(book);
+
+        if(data.type === 'err_data'){
+            console.log(data.message)
+            return null
+        }
+
         dispatch({ type: CREATE_BOOK, payload: data })
     } catch (error){
         console.log('error di action createBook')

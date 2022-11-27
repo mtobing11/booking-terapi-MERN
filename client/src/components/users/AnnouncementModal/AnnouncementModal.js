@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 // import components
 import { Box, Modal, LinearProgress, Fade } from '@mui/material';
 import { closeAnnouncement } from '../../../actions/announcement';
-import { closeTicket } from '../../../actions/book';
+import { closeTicket, refreshPage } from '../../../actions/book';
 import { TitleTypography, ContentTypography, NoteTypography } from './styles';
 
 const styleBase = {
@@ -34,6 +34,9 @@ const AnnouncementModal = ({ status, title, message, isShowProgress=false, isTim
       // console.log("close info")
       dispatch(closeAnnouncement())
       dispatch((closeTicket()))
+    }
+    if(isTicket){
+      dispatch(refreshPage())
     }
   };
 
