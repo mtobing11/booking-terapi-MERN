@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import component
-import { Grow, Container, Grid, CardMedia, Paper } from '@mui/material';
+import { Grow, Container, Grid, CardMedia, Paper, Avatar } from '@mui/material';
 import FrontTitle from '../FrontTitle/FrontTitle';
 import Footer from '../Footer/Footer';
 import UserForm from '../UserForm/UserForm';
 import AnnouncementModal from '../AnnouncementModal/AnnouncementModal';
+import WhatsApp from './WhatsApp';
 import image from '../../../data/terapi_ketok_kevin_01.jpg';
+import whatsApp from '../../../data/WhatsApp.png';
 
 // import action
 import { fetchAnnouncement } from '../../../actions/announcement';
@@ -82,7 +84,8 @@ const Home = () => {
     return (
         <Grow in>
             <CardMedia image={image}>
-                <Container maxWidth="sm" sx={{padding: 10}}>
+                <Container maxWidth="sm" sx={{padding: 10, position: 'relative'}} style={{ }}>
+                        <Avatar src={whatsApp} variant='square' sx={{ position: 'absolute', right: '0', bottom: '35%', zIndex: 100, width:'60px', height: '60px' }}/>
                     <Grid sx={{marginBottom: 10}}>
                         <FrontTitle />
                     </Grid>
