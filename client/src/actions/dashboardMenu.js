@@ -51,9 +51,6 @@ export const deleteDate = (id) => async (dispatch) => {
     try {
         await api.deleteDate(id);
         dispatch({ type: DELETE, payload: id})
-        // const dataAllDates = await api.fetchAllDates(new Date(11-25-2022));
-        // let newArr = sortDateArr(dataAllDates.data)
-        // dispatch({ type: FETCH_ALL_DATES_FOR_ADMIN, payload: newArr });
     } catch (error) {
         console.log(error);
     }
@@ -113,6 +110,7 @@ export const updateInitialSetup = (id, setUp) => async (dispatch) => {
 export const getCustomers = (date) => async (dispatch) => {
     try {
         const { data } = await api.fetchCustomers(date);
+        console.log(data);
         dispatch({ type: FETCH_CUSTOMERS, payload: data });
     } catch (error) {
         console.log(error)
@@ -154,7 +152,6 @@ export const updateExistingBookDate = (form, dateID, isOpen) => async (dispatch)
     let tempObj = {...form}
     
     if(isOpen){
-        console.log("here1")
         for (let i = 0; i < 3; i++) {
             if( i < tempObj.shifts){
                 tempObj[`shift${i+1}Available`] = true;

@@ -8,12 +8,12 @@ import Header from '../Header/Header';
 import NewBookingDate from './NewBookingDate/NewBookingDate';
 import TableBasic from '../Tables/TableBasic';
 
-// import actions
-import { getAllDates } from '../../../../actions/dashboardMenu';
-// import { getAllDates } from '../../../../actions/book';
+// // import actions
+// import { getAllDates } from '../../../../actions/dashboardMenu';
+// // import { getAllDates } from '../../../../actions/book';
 
-// functions
-import { formattingDate } from '../../../../utils/utils';
+// // functions
+// import { formattingDate } from '../../../../utils/utils';
 
 // class
 const BookingDateControl = () => {

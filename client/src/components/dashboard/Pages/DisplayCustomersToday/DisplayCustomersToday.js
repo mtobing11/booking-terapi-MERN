@@ -10,31 +10,52 @@ import Table from '../Tables/TableDisplayCustomers';
 // import actions
 import { getCustomers } from '../../../../actions/dashboardMenu';
 
+// functions
+import { sortDateArr, formattingDate } from '../../../../utils/utils'
+
 const DisplayCustomersToday = () => {
     const dispatch = useDispatch();
     const [dataCustomers, setDataCustomers] = useState([])
-    // const dataFetchCustomers = useSelector((state) => console.log(state));
     const dataFetchCustomers = useSelector((state) => state.dashboard?.dataCustomers);
+    const [date, setDate] = useState("")
+    const arrDates = useSelector((state) => state.dashboard?.dates)
 
     useEffect(() => {
-        dispatch(getCustomers(dayjs(new Date())))
-    }, [])
+        if(arrDates.length > 0){
+            getDataCustomers()
+        }
+    }, [arrDates])
 
     // useEffect(() => {
-    //     console.log(dataCustomers)
-    // }, [dataCustomers])
+    //     if(dataFetchCustomers){
+    //         setDataCustomers([dataFetchCustomers[0]?.shift1, dataFetchCustomers[0]?.shift2, dataFetchCustomers[0]?.shift3])
+    //     }
+    // }, [dataFetchCustomers])
 
-    useEffect(() => {
-        if(dataFetchCustomers){
-            setDataCustomers([dataFetchCustomers[0]?.shift1, dataFetchCustomers[0]?.shift2, dataFetchCustomers[0]?.shift3])
+    const getDataCustomers = () => {
+        let copyArr = [...arrDates];
+        let arrangeArr = sortDateArr(copyArr);
+
+        arrangeArr = arrangeArr.filter((item) => formattingDate(new Date(), 'ymd') == formattingDate(new Date(item.bookingdate), 'ymd'))
+        
+        let shiftNum = arrangeArr[0]?.shiftInfo.quantity;
+        let tempArr = [];
+        for (let i = 0; i < shiftNum; i++){
+            let shiftName = `shift${i+1}`
+            if(i < shiftNum){
+                tempArr.push(arrangeArr[0][shiftName])
+            }
         }
-    }, [dataFetchCustomers])
+        
+        setDataCustomers(tempArr);
+        setDate(arrangeArr[0]?.bookingdate);
+    }
 
     return (
         <Paper elevation={1} sx={{ m: '0.75rem', p: '1.5rem', borderRadius: '1.5rem' }}>
             <Header category="Page" title="Customer Hari Ini" />
             {dataCustomers.map((shift, idx) => (
-                <Table title={`shift ${idx+1}`} date={dataFetchCustomers[0]?.bookingdate} header={['Tanggal', 'Nama', 'No HP', 'Shift', 'No urut', 'booked at' ]} content={shift} key={`shift-${idx+1}`} />
+                <Table title={`shift ${idx+1}`} date={date} header={['Tanggal', 'Nama', 'No HP', 'Shift', 'No urut', 'booked at' ]} content={shift} key={`shift-${idx+1}`} />
             ))}
         </Paper>
     )
