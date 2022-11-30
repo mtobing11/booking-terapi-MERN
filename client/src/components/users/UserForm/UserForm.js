@@ -28,7 +28,6 @@ const initialStateData = { bookingdate: '', dateID: '', shifts: 3, shift1: '', s
 // class
 const UserForm = () => {
     const dispatch = useDispatch();
-    // const [dateID, setDateID] = useState('');
     const [formData, setFormData] = useState(initialStateForm);
     const [currData, setCurrData] = useState(initialStateData);
     const [isAlert, setIsAlert] = useState(false);
@@ -41,9 +40,6 @@ const UserForm = () => {
     }, [])
 
     useEffect(() => {
-        console.log('Available in client:')
-        console.log(availableDate)
-        
         if(availableDate.length > 0){
             setCurrData({
                 bookingdate: dayjs(availableDate[0]?.bookingdate), dateID: availableDate[0]?._id, shifts: availableDate[0]?.shiftInfo?.quantity, 
@@ -75,7 +71,6 @@ const UserForm = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const formattedPhone = phoneValidator(formData.cellphone)
-        // console.log(formData)
         dispatch(makeAppointment({ ...formData, cellphone: formattedPhone}, formData.dateID))
         // clear();
     }

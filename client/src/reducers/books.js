@@ -6,32 +6,22 @@ export default(state = { isProcessing: false, isCreateTicket: false, availableDa
             return { ...state, isProcessing: true }
         case END_PROCESSING:
             return { ...state, isProcessing: false }
-        case FETCH_ALL_DATES:
+        case FETCH_ALL_DATES: 
             return { ...state, availableDate: action.payload }
         case FETCH_SHIFTS:
             return { ...state, shifts: action.payload }
         case FRESH_TRUE:{
-            console.log("Refresh true reducer")
+            // console.log("Refresh true reducer")
             return { ...state, needRefresh: true }
         }
         case FRESH_FALSE: {
-            console.log("Refresh false reducer")
+            // console.log("Refresh false reducer")
             return { ...state, needRefresh: false }
         }
-        case CREATE_TICKET:
+        case CREATE_TICKET: 
             return { ...state, isCreateTicket: true, ticketData: action.payload }
         case CLOSE_TICKET:
             return { ...state, isCreateTicket: false, ticketData: {}, needFresh: true }
-        case CREATE_BOOK: {
-            console.log("add date")
-            return { ...state, availableDate: [...state.availableDate, action.payload] }
-        }
-        case UPDATE_DATA: 
-            return { ...state, availableDate: state.availableDate.map((date) => date._id === action.payload._id ? action.payload : date) }
-        case DELETE: {
-            console.log("delete date")
-            return { ...state, availableDate: state.availableDate.filter((date) => date._id !== action.payload) }
-        }
         default:
             return state;
     }

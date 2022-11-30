@@ -1,6 +1,6 @@
 import * as api from '../api';
-import { ACTIVE_MENU, RESIZE_SCREEN, AUTH, LOGOUT, INITIAL_SETUP, FETCH_CUSTOMERS, RESET, DELETE, UPDATE_DATA, CREATE_BOOK } from '../constants/actionTypes';
-import { formattingDate } from '../utils/utils';
+import { ACTIVE_MENU, RESIZE_SCREEN, AUTH, LOGOUT, INITIAL_SETUP, FETCH_CUSTOMERS, RESET, DELETE, UPDATE_DATA, CREATE_BOOK, FETCH_ALL_DATES, FETCH_ALL_DATES_FOR_ADMIN } from '../constants/actionTypes';
+import { formattingDate, sortDateArr } from '../utils/utils';
 
 export const handleActiveMenu = (activeMenu) => (dispatch) => {
     dispatch({ type: ACTIVE_MENU, payload: activeMenu })
@@ -27,8 +27,22 @@ export const createBook = (book) => async (dispatch) => {
         }
 
         dispatch({ type: CREATE_BOOK, payload: data })
+
+        // const dataAllDates = await api.fetchAllDates(new Date(11-25-2022));
+        // let newArr = sortDateArr(dataAllDates.data)
+        // dispatch({ type: FETCH_ALL_DATES, payload: newArr });
     } catch (error){
-        console.log('error di action createBook')
+        console.log(error)
+    }
+}
+
+// get All Dates
+export const getAllDates = (date) => async (dispatch) =>{
+    try {
+        const { data } = await api.fetchAllDates(date);
+        let newArr = sortDateArr(data)
+        dispatch({ type: FETCH_ALL_DATES_FOR_ADMIN, payload: newArr });
+    } catch (error) {
         console.log(error)
     }
 }
@@ -36,7 +50,10 @@ export const createBook = (book) => async (dispatch) => {
 export const deleteDate = (id) => async (dispatch) => {
     try {
         await api.deleteDate(id);
-        dispatch({ type: DELETE, payload: id});
+        dispatch({ type: DELETE, payload: id})
+        // const dataAllDates = await api.fetchAllDates(new Date(11-25-2022));
+        // let newArr = sortDateArr(dataAllDates.data)
+        // dispatch({ type: FETCH_ALL_DATES_FOR_ADMIN, payload: newArr });
     } catch (error) {
         console.log(error);
     }
@@ -107,7 +124,6 @@ export const getCustomers = (date) => async (dispatch) => {
 export const editingExistingBookDate = (data) => async (dispatch) => {
     try {
         console.log("Update date book")
-        console.log(data)
 
         let obj = {}
         obj['_id'] = data._id
@@ -118,7 +134,6 @@ export const editingExistingBookDate = (data) => async (dispatch) => {
         obj['shifts'] = data.shiftInfo.quantity
         obj['schedules'] = []
 
-        console.log(obj)
         for (let i = 0; i < 3; i++){
             if(data.shiftInfo.schedules[i]){
                 obj.schedules.push({shiftName: `shift${i+1}`, schedule: data.shiftInfo.schedules[i]})

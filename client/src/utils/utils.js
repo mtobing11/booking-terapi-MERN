@@ -102,3 +102,27 @@ Date.prototype.addDays = function(days){
     date.setDate(date.getDate() + days);
     return date
 }
+
+export const sortDateArr = (arr) => {
+    let newArr = [...arr]
+    
+    function compare(a, b){
+        if (a.bookingdate < b.bookingdate){
+            return -1
+        }
+        if (a.bookingdate > b.bookingdate){
+            return 1
+        }
+        return 0
+    }
+
+    return newArr.sort(compare)
+}
+
+export const addNewBookToArr = (arr, newBook) => {
+    let tempArr = [ ...arr, newBook ];
+    console.log("add new to arr")
+    console.log(arr)
+    console.log(newBook)
+    console.log(tempArr)
+}

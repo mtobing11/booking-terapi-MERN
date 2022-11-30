@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 // import component
-import { Grow, Container, Grid, CardMedia, Paper, Avatar } from '@mui/material';
+import { Grow, Container, Grid, CardMedia, Paper, Avatar, Link } from '@mui/material';
 import FrontTitle from '../FrontTitle/FrontTitle';
 import Footer from '../Footer/Footer';
 import UserForm from '../UserForm/UserForm';
@@ -27,6 +27,7 @@ const Home = () => {
     const arrAnnounce = useSelector((state) => state.announcements.announceData.length);
     const isCreateTicket = useSelector((state) => state.books.isCreateTicket);
     const shifts = useSelector((state) => state.books.shifts);
+    const whatsappLink = "https://api.whatsapp.com/send?phone=6281299098724&amp;text=Halo%20Terapi%20Ketok%20Mr.Kevin%20";
     const announcementID = '63736bef3dda6cf66d20d536';
 
     useEffect(() => {
@@ -85,7 +86,9 @@ const Home = () => {
         <Grow in>
             <CardMedia image={image}>
                 <Container maxWidth="sm" sx={{padding: 10, position: 'relative'}} style={{ }}>
-                        <Avatar src={whatsApp} variant='square' sx={{ position: 'absolute', right: '0', bottom: '35%', zIndex: 100, width:'60px', height: '60px' }}/>
+                        <Link href={whatsappLink} target="_blank" rel="noopener">
+                            <Avatar src={whatsApp} variant='square' sx={{ position: 'absolute', right: '0', bottom: '35%', zIndex: 100, width:'60px', height: '60px' }} />
+                        </Link>
                     <Grid sx={{marginBottom: 10}}>
                         <FrontTitle />
                     </Grid>

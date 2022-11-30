@@ -70,7 +70,6 @@ export const getAllDates = async (req, res) => {
     
     try {
         const arr = await BookForm25.find({ bookingdate: { $gte: newDate} })
-        // console.log(arr)
         res.json(arr)
     } catch (error) {
         res.status(409).json({ message: error.message });

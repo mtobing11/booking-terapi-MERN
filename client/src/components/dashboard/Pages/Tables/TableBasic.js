@@ -6,17 +6,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGripVertical } from '@fortawesome/free-solid-svg-icons';
 import BasicMenu from './BasicMenu';
 
-const TableBasic = ({ header, content }) => {
+// functions
+import { formattingDate, sortDateArr } from '../../../../utils/utils';
+
+const TableBasic = ({ header, content, editDateRef }) => {
   const [contentArr, setContentArr] = useState([])
-  // const [myAction, setMyAction] = useState("null")
 
   useEffect(() => {
     if(content){
-      setContentArr(content)
+      let tempArr = [...content];
+      setContentArr(sortDateArr(tempArr))
     } else if (!content){
       setContentArr([])
     }
-    // console.log(content)
+    let tempArr = [...content]
   }, [content])
 
 
@@ -39,7 +42,7 @@ const TableBasic = ({ header, content }) => {
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {item.bookingdate}
+                {formattingDate(new Date(item.bookingdate), 'dmmy')}
               </TableCell>
               <TableCell align="right">{item.shiftInfo.quantity}</TableCell>
               <TableCell align="right">{item.max}</TableCell>
@@ -47,7 +50,7 @@ const TableBasic = ({ header, content }) => {
               <TableCell align="right">{item.available === true ? 'open' : 'closed'}</TableCell>
               <TableCell align="left">{item.shiftInfo.schedules.join(" // ")}</TableCell>
               <TableCell align="right">
-                <BasicMenu icon={<FontAwesomeIcon icon={faGripVertical} />} data={item} />
+                <BasicMenu icon={<FontAwesomeIcon icon={faGripVertical} />} data={item} editDateRef={editDateRef} />
               </TableCell>
             </TableRow>
           ))}

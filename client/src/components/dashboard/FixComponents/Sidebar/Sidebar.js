@@ -43,7 +43,6 @@ const Sidebar = () => {
   const screenSize = useSelector((state) => state.dashboard.screenSize);
 
   const handleCloseSideBar = () => {
-    console.log("trying to close:", activeMenu, screenSize);
     if(activeMenu && screenSize <= 900){
       dispatch(handleActiveMenu(false))
     }

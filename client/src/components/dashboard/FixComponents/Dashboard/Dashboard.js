@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import decode from 'jwt-decode';
+import dayjs from 'dayjs';
 
 // import components
 import Sidebar from '../Sidebar/Sidebar';
 import Navbar from '../Navbar/Navbar';
+
+// import actions
+import { getAllDates } from '../../../../actions/dashboardMenu';
 
 const stylePage = {
     position: 'relative',
@@ -25,6 +29,13 @@ const Dashboard = () => {
     if(!user){
       console.log('logout automatically');
       navigate('/auth');
+    }
+    if(user){
+      console.log("initial for booking date control")
+      let dateNow = new Date(11-25-2022);
+      dateNow.setDate(dateNow.getDate());
+
+      dispatch(getAllDates(dayjs(new Date(dateNow))))
     }
   }, []);
 

@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 // import actions
 import { editingExistingBookDate, updateExistingBookDate, deleteDate } from '../../../../actions/dashboardMenu';
 
-export default function BasicMenu({icon, data}) {
+export default function BasicMenu({ icon, data, editDateRef }) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -21,10 +21,9 @@ export default function BasicMenu({icon, data}) {
     const { myValue } = (e.currentTarget.dataset)
 
     if(myValue=="edit"){
+      handleNext()
       dispatch(editingExistingBookDate(data))
     } else if(myValue == "closed"){
-      console.log("closing the date ...")
-      console.log(data)
       let newObjData = {...data, available: false}
       dispatch(updateExistingBookDate(newObjData, data._id, false))
     } else if(myValue == "delete"){
@@ -33,6 +32,12 @@ export default function BasicMenu({icon, data}) {
       console.log("no action executed")
     }
   };
+
+  const handleNext = () => {
+    // let editDateInstance = editDateRef.current.getInstance()
+    // editDateInstance.next()
+    editDateRef.current.focus()
+  }
 
   return (
     <div>

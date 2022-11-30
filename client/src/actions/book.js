@@ -1,6 +1,6 @@
 import * as api from '../api';
 import { FETCH_ALL_DATES, CREATE_TICKET, CLOSE_TICKET, FETCH_ANNOUNCEMENT, CLOSE_ANNOUNCEMENT, FETCH_SHIFTS, FRESH_TRUE, FRESH_FALSE} from '../constants/actionTypes';
-import { formattingDate } from '../utils/utils';
+import { formattingDate, sortDateArr } from '../utils/utils';
 
 // get available dates
 export const getAvailableDates = (date) => async (dispatch) =>{
@@ -10,21 +10,11 @@ export const getAvailableDates = (date) => async (dispatch) =>{
         if(data.length < 1){
             return dispatch({ type: FETCH_ANNOUNCEMENT, payload: { message: "Maaf, saat ini semua tanggal sudah penuh", type: "err_data"} })
         }
-        
-        dispatch({ type: FETCH_ALL_DATES, payload: data });
+        let newArr = sortDateArr(data)
+        dispatch({ type: FETCH_ALL_DATES, payload: newArr });
         dispatch({ type: FETCH_SHIFTS, payload: data[0].shiftInfo.schedules });
     } catch (error) {
-        console.log(error)
-    }
-}
-
-// get All Dates
-export const getAllDates = (date) => async (dispatch) =>{
-    try {
-        const { data } = await api.fetchAllDates(date);
-        dispatch({ type: FETCH_ALL_DATES, payload: data });
-    } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
 
