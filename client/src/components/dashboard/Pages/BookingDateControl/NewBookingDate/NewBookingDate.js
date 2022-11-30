@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 
@@ -16,10 +16,11 @@ const initialState = {
     newdatebook: '', capacitybook: 22, maxbooking: 2, shifts: 3, schedule: ['10:30 - 12:30', '15:00 - 14:00', '19:00 - 21:00']
 }
 
-const NewBookingDate = ({ editDateRef }) => {
+const NewBookingDate = () => {
   const id = "637d11df564a6ec83703ce95";
   const user = JSON.parse(localStorage.getItem('profile'));
   const dispatch = useDispatch();
+  const editRef = useRef();
   const dateNow = new Date();
   dateNow.setDate(dateNow.getDate() + 1);
   
@@ -53,6 +54,12 @@ const NewBookingDate = ({ editDateRef }) => {
     }
     
   }, [initialSetup])
+
+  useEffect(() => {
+    if(existingBookID){
+      editRef.current.focus()
+    }
+  }, [existingBookID])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,7 +109,7 @@ const NewBookingDate = ({ editDateRef }) => {
               )}
             </LocalizationProvider>
             <TextField name="shifts" label="Jumlah Shift" type="number" min={1} max={3} value={formNewDate.shifts} required={true} size="small"
-                InputLabelProps={{ shrink: true, }}  sx={{ my: '1rem' }} inputRef={editDateRef} autoFocus={true}
+                InputLabelProps={{ shrink: true, }}  sx={{ my: '1rem' }} autoFocus={true} inputRef={editRef}
                 onChange={ (e)=> setFormNewDate({ ...formNewDate, shifts: e.target.value }) } 
             />
             <div style={{display: 'flex', justifyContent: 'flex-start', gap: '0.5rem'}}>

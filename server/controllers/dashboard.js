@@ -8,8 +8,6 @@ import { formatDate } from '../utils/utils.js'
 
 // fetch if there is an opening massage
 export const getAnnouncement = async (req, res) => {
-    console.log("Get Opening Announcement");
-
     const { id } = req.params;
 
     try {
@@ -37,7 +35,7 @@ export const createAnnouncement = async (req, res) => {
 
 // edit he existing opening announcement
 export const updateAnnouncement = async (req, res) => {
-    console.log("Make (update) announcement")
+    console.log("Update announcement")
 
     const { duration, message, status } = req.body;
     const id = req.params.id;
@@ -87,7 +85,7 @@ export const createInitialSetup = async (req, res) => {
 
 // edit he existing opening announcement
 export const updateInitialSetup = async (req, res) => {
-    console.log("Make (update) setup")
+    console.log("Update setup")
 
     const { max, maxbooking, shifts, schedules } = req.body;
     const id = req.params.id;
@@ -112,7 +110,7 @@ export const updateInitialSetup = async (req, res) => {
         console.log(oldSetup)
 
         const newSetup = await InitialSetup.findByIdAndUpdate(id, oldSetup, {new: true})
-        // console.log(newSetup)
+        
         res.status(201).json(newSetup)
     } catch (error) {
         res.status(409).json({ message: error.message });
@@ -121,7 +119,6 @@ export const updateInitialSetup = async (req, res) => {
 
 // fetch customers data
 export const getCustomers = async (req, res) => {
-    console.log("Get customer");
 
     const { date: getDate } = req.params;
     let newDate = formatDate(getDate);

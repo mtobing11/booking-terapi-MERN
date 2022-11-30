@@ -9,7 +9,7 @@ import BasicMenu from './BasicMenu';
 // functions
 import { formattingDate, sortDateArr } from '../../../../utils/utils';
 
-const TableBasic = ({ header, content, editDateRef }) => {
+const TableBasic = ({ header, content }) => {
   const [contentArr, setContentArr] = useState([])
 
   useEffect(() => {
@@ -50,7 +50,7 @@ const TableBasic = ({ header, content, editDateRef }) => {
               <TableCell align="right">{item.available === true ? 'open' : 'closed'}</TableCell>
               <TableCell align="left">{item.shiftInfo.schedules.join(" // ")}</TableCell>
               <TableCell align="right">
-                <BasicMenu icon={<FontAwesomeIcon icon={faGripVertical} />} data={item} editDateRef={editDateRef} />
+                <BasicMenu icon={<FontAwesomeIcon icon={faGripVertical} />} data={item} />
               </TableCell>
             </TableRow>
           ))}
