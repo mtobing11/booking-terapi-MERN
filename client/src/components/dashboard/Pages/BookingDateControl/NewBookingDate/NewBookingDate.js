@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 
 // import components
 import { Paper, Typography, Button, TextField, Box } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
@@ -11,10 +12,14 @@ import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 // import actions
 import { createBook, getInitialSetup, updateExistingBookDate } from '../../../../../actions/dashboardMenu';
 
+// functions
+import { formattingDate } from '../../../../../utils/utils'
+
 // initial state
 const initialState = {
     newdatebook: '', capacitybook: 22, maxbooking: 2, shifts: 3, schedule: ['10:30 - 12:30', '15:00 - 14:00', '19:00 - 21:00']
 }
+
 
 const NewBookingDate = () => {
   const id = "637d11df564a6ec83703ce95";
@@ -26,12 +31,14 @@ const NewBookingDate = () => {
   
   const [formNewDate, setFormNewDate] = useState({...initialState, newdatebook: dayjs(dateNow), creator: user?.userData?.name});
   const [shiftArr, setShiftArr] = useState([]);
-  const availableDate = useSelector((state) => state.dashboard?.dates);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dateForDialog, setDateForDialog] = useState(formattingDate(new Date(dateNow), 'dmmy-time'));
   const initialSetup = useSelector((state) => state.dashboard?.initialSetup);
   const existingBookID = useSelector((state) => state.dashboard?.existingBookID)
 
   useEffect(() => {
     dispatch(getInitialSetup(id));
+    console.log(dateForDialog)
   }, [])
 
   useEffect(() => {
@@ -63,6 +70,7 @@ const NewBookingDate = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setDialogOpen(false);
     if(existingBookID){
       dispatch(updateExistingBookDate( formNewDate, existingBookID, true))
     } else {
@@ -76,6 +84,7 @@ const NewBookingDate = () => {
   }
 
   const handleDateChange = (newValue) => {
+    setDateForDialog(formattingDate(new Date(newValue), 'dmmy-time'))
     setFormNewDate({ ...formNewDate, newdatebook: newValue})
   };
 
@@ -133,7 +142,24 @@ const NewBookingDate = () => {
                   sx={{ my: '1rem', width: '100%' }}
               />
             </div>
-            <Button variant="contained" color="primary" size="large" type="submit" sx={{ my: '1rem' }} fullWidth>Submit</Button>
+            
+            <Button variant="contained" color="primary" size="large" sx={{ my: '1rem' }} onClick={() => setDialogOpen(true)}>Want to Submit?</Button>
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} aria-labelledby='dialog-title' aria-describedby='dialog-description'>
+              <DialogTitle id='dialog-title'>Confirm?</DialogTitle>
+              <DialogContent>
+                <DialogContentText id='dialog-description'>
+                  Date: {existingBookID ? formattingDate(new Date(formNewDate.bookingdate), 'dmmy-time') :dateForDialog} <br/>
+                  Total Shifts: {formNewDate.shifts} shift<br/>
+                  Maksimal per shift: {formNewDate.capacitybook} orang<br/>
+                  Maksimal no HP: {formNewDate.maxbooking} kali/nomer
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant="contained" color="warning" size="large" sx={{ my: '1rem' }} fullWidth onClick={() => setDialogOpen(false)}>No</Button>
+                <Button variant="contained" color="primary" size="large" type="submit" sx={{ my: '1rem' }} fullWidth onClick={handleSubmit}>Yes</Button>
+              </DialogActions>
+            </Dialog>
+            {/* <Button variant="contained" color="primary" size="large" type="submit" sx={{ my: '1rem' }} fullWidth>Submit</Button> */}
         </form>
     </Paper>
   )

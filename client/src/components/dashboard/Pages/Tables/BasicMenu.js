@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 // import components
@@ -22,12 +22,12 @@ export default function BasicMenu({ icon, data }) {
     setAnchorEl(null);
     const { myValue } = (e.currentTarget.dataset)
 
-    if(myValue=="edit"){
+    if(myValue==="edit"){
       dispatch(editingExistingBookDate(data))
-    } else if(myValue == "closed"){
+    } else if(myValue === "closed"){
       let newObjData = {...data, available: false}
       dispatch(updateExistingBookDate(newObjData, data._id, false))
-    } else if(myValue == "delete"){
+    } else if(myValue === "delete"){
       dispatch(deleteDate(data._id))
     } else {
       console.log("no action executed")
@@ -58,6 +58,7 @@ export default function BasicMenu({ icon, data }) {
         <MenuItem data-my-value="closed" onClick={(e) => handleClose(e)}>Close</MenuItem>
         <MenuItem data-my-value="delete" onClick={(e) => handleClose(e)}>Delete</MenuItem>
       </Menu>
+
     </div>
   );
 }
