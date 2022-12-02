@@ -94,7 +94,7 @@ export const makeAppointment = async (req, res) => {
         // check apakah shift yang dipilih masih ada tempat atau tidak
         const capacityShift = `${sessionbook}Available`;
         if(book[capacityShift] == false){
-            return res.json({message: "Jam ini sudah penuh", type: "err_data"})
+            return res.json({message: "Maaf jam ini sudah penuh", type: "err_data"})
         };
 
         //check apakah sudah booking 2x
@@ -159,6 +159,10 @@ export const getAppointment = async (req, res) => {
                 index = ind;
             }
         })
+
+        if(!book.name || !book.cellphone || !book._id ){
+            return res.json({message: "Maaf jam ini sudah penuh" , type: "err_data"})
+        }
         
         if(book){
             newData.name = book.name;

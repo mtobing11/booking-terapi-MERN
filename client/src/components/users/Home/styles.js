@@ -1,8 +1,9 @@
-import { styled } from '@mui/material/styles';
-import { Card } from '@mui/material';
+import { styled, createTheme } from '@mui/material/styles';
+import { Card, CardMedia } from '@mui/material';
 
 const OverlayCard = styled(Card)`
     position: relatif;
 `;
 
-export { OverlayCard }
+
+// export { OverlayCard }

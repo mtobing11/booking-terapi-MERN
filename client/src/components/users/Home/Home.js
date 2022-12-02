@@ -3,16 +3,23 @@ import { useSelector, useDispatch } from 'react-redux';
 
 // import component
 import { Grow, Container, Grid, CardMedia, Paper, Avatar, Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import FrontTitle from '../FrontTitle/FrontTitle';
 import Footer from '../Footer/Footer';
 import UserForm from '../UserForm/UserForm';
 import AnnouncementModal from '../AnnouncementModal/AnnouncementModal';
 import WhatsApp from './WhatsApp';
-import image from '../../../data/terapi_ketok_kevin_01.jpg';
+import image from '../../../data/terapi_ketok_kevin_02.jpg';
 import whatsApp from '../../../data/WhatsApp.png';
+// import { ima } from './styles';
 
 // import action
 import { fetchAnnouncement } from '../../../actions/announcement';
+
+const ResponsiveMedia = styled(CardMedia)({
+    width: 'auto',
+    height: '100vh'
+})
 
 const Home = () => {
     const dispatch = useDispatch();
@@ -84,18 +91,16 @@ const Home = () => {
 
     return (
         <Grow in>
-            <CardMedia image={image}>
-                <Container maxWidth="sm" sx={{padding: 10, position: 'relative'}} style={{ }}>
-                        <Link href={whatsappLink} target="_blank" rel="noopener">
-                            <Avatar src={whatsApp} variant='square' sx={{ position: 'absolute', right: '0', bottom: '35%', zIndex: 100, width:'60px', height: '60px' }} />
-                        </Link>
+            <ResponsiveMedia image={image}>
+                <Container maxWidth="sm" sx={{padding: 2, position: 'relative', minHeight: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between'}}>
+                    <Link href={whatsappLink} target="_blank" rel="noopener">
+                        <Avatar src={whatsApp} variant='square' sx={{ position: 'absolute', right: '0', bottom: '35%', zIndex: 100, width:'60px', height: '60px' }} />
+                    </Link>
                     <Grid sx={{marginBottom: 10}}>
                         <FrontTitle />
                     </Grid>
                     <Grid>
                         <UserForm />
-                    </Grid>
-                    <Grid>
                         <Footer />
                     </Grid>
                     <Paper>
@@ -108,7 +113,7 @@ const Home = () => {
                         )}
                     </Paper>
                 </Container>
-            </CardMedia>
+            </ResponsiveMedia>
         </Grow>
     )
 }

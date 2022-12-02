@@ -51,32 +51,35 @@ const Sidebar = () => {
   return (
     <Paper style={style02}>
       {activeMenu && (
-        <div>
-          <div style={style03}>
-            <Link to="/dashboard" onClick={handleCloseSideBar} style={style04}>
-              <FontAwesomeIcon icon={faHouse} /><span>Home</span>
-            </Link>
-            <Tooltip title="Menu" placement="bottom">
-              <Button sx={{ display: { xs: 'block', sm: 'block', md: 'none' }, py: '0.4rem', px: '0.4rem' }} onClick={handleCloseSideBar}>
-                <FontAwesomeIcon icon={faX} />
-              </Button>
-            </Tooltip>
+        <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '100%'}}>
+          <div>
+            <div style={style03}>
+              <Link to="/dashboard" onClick={handleCloseSideBar} style={style04}>
+                <FontAwesomeIcon icon={faHouse} /><span>Home</span>
+              </Link>
+              <Tooltip title="Menu" placement="bottom">
+                <Button sx={{ display: { xs: 'block', sm: 'block', md: 'none' }, py: '0.4rem', px: '0.4rem' }} onClick={handleCloseSideBar}>
+                  <FontAwesomeIcon icon={faX} />
+                </Button>
+              </Tooltip>
+            </div>
+            <Paper sx={{mt: '1.25rem', mx: '0.75rem'}} elevation={0}>
+              {links.map((item) => (
+                <Paper key={item.title} elevation={0}>
+                  <Typography>{item.title}</Typography>
+                  {item.links.map((link) => (
+                    <NavLink to={`/dashboard/${link.link}`} key={link.name} onClick={handleCloseSideBar}
+                      style = { ({ isActive }) => isActive ? activeLink : normalLink }
+                    >
+                      <span style={{ width: '30px' }}>{link.icon}</span>
+                      <Typography sx={{ textTransform: 'capitalize' }} >{link.name}</Typography>
+                    </NavLink>
+                  ))}
+                </Paper>
+              ))}
+            </Paper>
           </div>
-          <Paper sx={{mt: '1.25rem', mx: '0.75rem'}} elevation={0}>
-            {links.map((item) => (
-              <Paper key={item.title} elevation={0}>
-                <Typography>{item.title}</Typography>
-                {item.links.map((link) => (
-                  <NavLink to={`/dashboard/${link.link}`} key={link.name} onClick={handleCloseSideBar}
-                    style = { ({ isActive }) => isActive ? activeLink : normalLink }
-                  >
-                    <span style={{ width: '30px' }}>{link.icon}</span>
-                    <Typography sx={{ textTransform: 'capitalize' }} >{link.name}</Typography>
-                  </NavLink>
-                ))}
-              </Paper>
-            ))}
-          </Paper>
+          <Typography align="center" variant="body2" sx={{fontSize: '0.7rem'}}>dashboard ver 1.1.1</Typography>
         </div>
       )}
     </Paper>

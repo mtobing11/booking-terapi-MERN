@@ -10,16 +10,6 @@ export default function FloatingActionButtons() {
       <Fab color="primary" aria-label="add">
         <FontAwesomeIcon icon={faSquarePhone} />
       </Fab>
-      {/* <Fab color="secondary" aria-label="edit">
-        <FontAwesomeIcon icon={faPhoneSquare} />
-      </Fab>
-      <Fab variant="extended">
-        <FontAwesomeIcon icon={faPhoneSquare} />
-        Navigate
-      </Fab>
-      <Fab disabled aria-label="like">
-        <FontAwesomeIcon icon={faPhoneSquare} />
-      </Fab> */}
     </Box>
   );
 }
